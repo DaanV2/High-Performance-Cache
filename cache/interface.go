@@ -1,12 +1,12 @@
 package cache
 
-//CachableItem
+// CachableItem
 type CachableItem interface {
 	//GetKey returns the key of the item
 	GetKey() string
 }
 
-//Cache
+// Cache
 type Cache[T CachableItem] interface {
 	//Get returns the item from the cache.
 	Get(key string) (T, error)
