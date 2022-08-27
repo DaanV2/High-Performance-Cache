@@ -1,28 +1,28 @@
 # Benchmark results
 
-## Benchmark: DefaultWriteTest MapCache, Per Size 
+## Benchmark: Default Write Test MapCache, Per Size 
 
 |Test Attributes|Value|
 |---------------|:-----|
-|cpu|Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz|
-|concurrency|2|
 |goos|linux|
 |goarch|amd64|
 |pkg|github.com/DaanV2/High-Performance-Cache/benchmarks|
+|cpu|Intel(R) Xeon(R) Platinum 8171M CPU @ 2.60GHz|
+|concurrency|2|
 
 |Name|Test Amount|Nanoseconds per operation|Bytes per operation|Allocations per operation|
 |----|---:|---:|---:|---:|
-|10, Test: Writing-2|828039|1504|168|4|
-|100, Test: Writing-2|171572|6602|168|4|
-|1000, Test: Writing-2|17292|67566|168|4|
-|10000, Test: Writing-2|1351|898551|168|4|
+|10, Test: Writing-2|637848|1926|168|4|
+|100, Test: Writing-2|117382|9647|168|4|
+|1000, Test: Writing-2|12832|97995|168|4|
+|10000, Test: Writing-2|770|1440182|168|4|
 
-## Benchmark: DefaultReadTest MapCache, Per Size 
+## Benchmark: Default Read Test MapCache, Per Size 
 
 |Name|Test Amount|Nanoseconds per operation|Bytes per operation|Allocations per operation|
 |----|---:|---:|---:|---:|
-|10, Test: Reading-2|927782|1342|176|4|
-|100, Test: Reading-2|230473|4746|176|4|
-|1000, Test: Reading-2|12076|98599|176|4|
-|10000, Test: Reading-2|1089|1084074|176|4|
+|10, Test: Reading-2|676890|1659|176|4|
+|100, Test: Reading-2|189848|6993|176|4|
+|1000, Test: Reading-2|10000|109543|176|4|
+|10000, Test: Reading-2|1015|1149007|176|4|
 
