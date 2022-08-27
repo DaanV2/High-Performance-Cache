@@ -38,7 +38,7 @@ func (report *MarkDownReport) WriteTo(filepath string) error {
 
 		//Write test results
 		writer.WriteString("|Name|" + strings.Join(report.Headers, "|") + "|\n")
-		writer.WriteString("|----|" + strings.Repeat("---:|", len(report.Headers)) + "\n")
+		writer.WriteString("|----:|" + strings.Repeat("---:|", len(report.Headers)) + "\n")
 
 		for _, result := range report.Results {
 			writer.WriteString("|" + result.Name + "|" + strings.Join(result.Values, "|") + "|\n")
