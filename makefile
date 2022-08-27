@@ -1,8 +1,11 @@
 
 
 
-benchmark:
+benchmark-latest:
 	go test -benchmem -run=^# -benchtime=1s -bench=. ./benchmarks > ./reports/latest.txt
+
+benchmark:
+	go test -benchmem -run=^# -benchtime=1s -bench=. ./benchmarks
 
 build:
 	go build ./...
@@ -10,5 +13,5 @@ build:
 test:
 	go test ./...
 
-generate_reports:
+generate-reports:
 	go run ./cmd/reports/main.go
