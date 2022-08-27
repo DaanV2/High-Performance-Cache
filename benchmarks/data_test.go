@@ -10,27 +10,32 @@ import (
 )
 
 const TestDataSize = 100_000
+const PowerStep = 10
 
 func init() {
 	DataSet = make([]*BenchmarkData, TestDataSize)
-	Sizes = make([]int, 0)
 
 	fmt.Printf("Generating data set with %v items\n", len(DataSet))
 	for i := 0; i < len(DataSet); i++ {
 		DataSet[i] = NewBenchMarData()
 	}
 
-	for size := 10; size < len(DataSet); {
-		Sizes = append(Sizes, size)
-		size *= 10
-	}
-
 	fmt.Println("Generating data done")
 	fmt.Printf("concurrency: %v\n", util.MaxConcurrency)
 }
 
+func GenerateSizes[T any](items []T) []int {
+	Sizes := make([]int, 0)
+
+	for size := PowerStep; size < len(DataSet); {
+		Sizes = append(Sizes, size)
+		size *= PowerStep
+	}
+
+	return Sizes
+}
+
 var DataSet []*BenchmarkData
-var Sizes []int
 
 type BenchmarkData struct {
 	Id          string

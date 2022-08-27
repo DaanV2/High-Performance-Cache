@@ -1,6 +1,8 @@
 package util
 
 import (
+	"fmt"
+
 	util_os "github.com/DaanV2/High-Performance-Cache/util/os"
 	"github.com/klauspost/cpuid/v2"
 )
@@ -19,6 +21,10 @@ func init() {
 
 	cpuinfo.Cache.CheckAndEstimate()
 
+	fmt.Printf("cpu: %s\n", cpuinfo.BrandName)
+	fmt.Printf("cache L1: %v\n", cpuinfo.Cache.L1)
+	fmt.Printf("cache L2: %v\n", cpuinfo.Cache.L2)
+	fmt.Printf("cache L3: %v\n", cpuinfo.Cache.L3)
 }
 
 var cpuinfo *CPUData

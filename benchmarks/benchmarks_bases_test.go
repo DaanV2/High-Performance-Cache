@@ -1,0 +1,61 @@
+package benchmarks
+
+import (
+	"fmt"
+	"testing"
+
+	"github.com/DaanV2/High-Performance-Cache/cache"
+	"github.com/DaanV2/High-Performance-Cache/util"
+)
+
+
+type TestSettings struct {
+	Name string
+	CreateCache func (size int) cache.Cache[*BenchmarkData]
+}
+
+func RunBenchMarks(b *testing.B, testdata []*BenchmarkData, settings []*TestSettings, benchmark func(b *testing.B, settings *TestSettings, testdata []*BenchmarkData)) {
+	sizes := GenerateSizes(testdata)
+
+	for _, size := range sizes {
+		for _, settings := range settings {
+			benchmark(b, settings, testdata[:size])
+		}
+	}
+
+	fmt.Println("Done")
+}
+
+func WriteTest(b *testing.B, settings *TestSettings, testdata []*BenchmarkData) {	
+	cache := settings.CreateCache(len(testdata))
+
+	b.Run(Name("%s, Size Per %v, Test: Writing", settings.Name, len(testdata)), func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			util.Parralel(testdata, func(item *BenchmarkData, index int, current []*BenchmarkData) {
+				cache.Set(item)
+			})
+		}
+	})
+}
+
+func ReadTest(b *testing.B, settings *TestSettings, testdata []*BenchmarkData) {
+	cache := settings.CreateCache(len(testdata))
+
+	//Fill test
+	util.Parralel(testdata, func(item *BenchmarkData, index int, current []*BenchmarkData) {
+		cache.Set(item)
+	})
+
+
+	b.Run(Name("%s, Size Per %v, Test: Writing", settings.Name, len(testdata)), func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			util.Parralel(testdata, func(item *BenchmarkData, index int, current []*BenchmarkData) {
+				if _, err := cache.Get(item.GetKey()); err != nil {
+					b.Fatal("Could not get item from cache")
+				}
+			})
+		}
+	})
+
+
+}
