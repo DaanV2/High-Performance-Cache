@@ -25,6 +25,7 @@ func init() {
 	fmt.Printf("cache L1: %v\n", cpuinfo.Cache.L1)
 	fmt.Printf("cache L2: %v\n", cpuinfo.Cache.L2)
 	fmt.Printf("cache L3: %v\n", cpuinfo.Cache.L3)
+	fmt.Printf("concurrency: %v\n", MaxConcurrency)
 }
 
 var cpuinfo *CPUData

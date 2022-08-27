@@ -1,12 +1,10 @@
 package benchmarks
 
 import (
+	"encoding/binary"
 	"encoding/hex"
 	"fmt"
-	"math/rand"
 	"time"
-
-	"github.com/DaanV2/High-Performance-Cache/util"
 )
 
 const TestDataSize = 100_000
@@ -16,12 +14,11 @@ func init() {
 	DataSet = make([]*BenchmarkData, TestDataSize)
 
 	fmt.Printf("Generating data set with %v items\n", len(DataSet))
-	for i := 0; i < len(DataSet); i++ {
-		DataSet[i] = NewBenchMarData()
-	}
+	max := uint64(len(DataSet))
 
-	fmt.Println("Generating data done")
-	fmt.Printf("concurrency: %v\n", util.MaxConcurrency)
+	for i := uint64(0); i < max; i++ {
+		DataSet[i] = NewBenchMarData(i)
+	}
 }
 
 func GenerateSizes[T any](items []T) []int {
@@ -46,11 +43,16 @@ type BenchmarkData struct {
 	DeletedAt   time.Time
 }
 
-func NewBenchMarData() *BenchmarkData {
+func NewBenchMarData(id uint64) *BenchmarkData {
+	bytes := make([]byte, 8)
+	binary.LittleEndian.PutUint64(bytes, id)
+	str := hex.EncodeToString(bytes)
+	str = str + str
+
 	return &BenchmarkData{
-		Id:          RandomStr(16),
-		Name:        RandomStr(16),
-		Description: RandomStr(16),
+		Id:          str,
+		Name:        str,
+		Description: str,
 		CreatedAt:   time.Now(),
 		UpdatedAt:   time.Now(),
 		DeletedAt:   time.Now(),
@@ -59,11 +61,4 @@ func NewBenchMarData() *BenchmarkData {
 
 func (b *BenchmarkData) GetKey() string {
 	return b.Id
-}
-
-func RandomStr(length int) string {
-	bytes := make([]byte, length)
-	rand.Read(bytes)
-
-	return hex.EncodeToString(bytes)
 }
