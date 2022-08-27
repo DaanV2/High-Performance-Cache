@@ -51,7 +51,7 @@ func NewCacheBucketSlice[T CachableItem](settings CacheBucketSliceSettings) Cach
 	}
 }
 
-func (bucketSlice *CacheBucketSlice[T]) GetStartIndex(hashcode int32) int {
+func (bucketSlice *CacheBucketSlice[T]) GetStartIndex(hashcode uint64) int {
 	return int(hashcode) % len(bucketSlice.items)
 }
 
@@ -90,9 +90,11 @@ func (bucketSlice *CacheBucketSlice[T]) Clean(time time.Time) int {
 	return count
 }
 
-func (bucketSlice *CacheBucketSlice[T]) Get(key KeyLookup) (*T, bool) {
+func (bucketSlice *CacheBucketSlice[T]) Get(key KeyLookup) (T, bool) {
+	var result T
+
 	if !bucketSlice.hashRange.IsInRange(key.HashCode) {
-		return nil, false
+		return result, false
 	}
 
 	//Get the index we expect the item to be at, based on the hashcode
@@ -115,7 +117,7 @@ func (bucketSlice *CacheBucketSlice[T]) Get(key KeyLookup) (*T, bool) {
 		}
 	}
 
-	return nil, false
+	return result, false
 }
 
 func (bucketSlice *CacheBucketSlice[T]) Set(value CacheItem[T]) bool {
@@ -157,4 +159,9 @@ func (bucketSlice *CacheBucketSlice[T]) Set(value CacheItem[T]) bool {
 	}
 
 	return false
+}
+
+// Count returns the amount of items in the cache.
+func (bucketSlice *CacheBucketSlice[T]) Count() int {
+	return bucketSlice.itemCount
 }

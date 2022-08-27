@@ -5,8 +5,13 @@ import (
 	"testing"
 )
 
-func Benchmark_Unique_Items_Write_Test(b *testing.B) {
-	data := DataSet
+func Benchmark_Duplicate_Items_Write_Test(b *testing.B) {
+	temp := DataSet
+	data := make([]*BenchmarkData, len(temp))
+
+	for i := 0; i < len(temp); i++ {
+		data[i] = temp[i % 64]
+	}
 
 	tests := []*TestSettings{
 		{
@@ -20,7 +25,7 @@ func Benchmark_Unique_Items_Write_Test(b *testing.B) {
 	fmt.Println("Done")
 }
 
-func Benchmark_Unique_Items_Read_Test(b *testing.B) {
+func Benchmark_Duplicate_Items_Read_Test(b *testing.B) {
 	data := DataSet
 
 	tests := []*TestSettings{
@@ -34,3 +39,6 @@ func Benchmark_Unique_Items_Read_Test(b *testing.B) {
 
 	fmt.Println("Done")
 }
+
+
+

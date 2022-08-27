@@ -21,11 +21,6 @@ func (report *MarkDownReport) WriteTo(filepath string) error {
 			continue
 		}
 
-		//Write title
-		if _, err := writer.WriteString(fmt.Sprintf("## Benchmark: %s \n\n", report.Title)); err != nil {
-			return err
-		}
-
 		//Write test attributes
 		if len(report.Attributes) > 0 {
 			writer.WriteString("|Test Attributes|Value|\n")
@@ -34,6 +29,11 @@ func (report *MarkDownReport) WriteTo(filepath string) error {
 				writer.WriteString(fmt.Sprintf("|%v|%v|\n", key, value))
 			}
 			writer.WriteString("\n")
+		}
+
+		//Write title
+		if _, err := writer.WriteString(fmt.Sprintf("## Benchmark: %s \n\n", report.Title)); err != nil {
+			return err
 		}
 
 		//Write test results
