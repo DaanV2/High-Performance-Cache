@@ -29,7 +29,7 @@ func (report *MarkDownReport) WriteTo(filepath string) error {
 			attributes := make([]string, len(report.Attributes))
 
 			for key, value := range report.Attributes {
-				attributes = append(attributes, fmt.Sprintf("%s: %s", key, value))
+				attributes = append(attributes, fmt.Sprintf("|%s|%s|", key, value))
 			}
 
 			sort.SliceStable(attributes, func(i, j int) bool {
