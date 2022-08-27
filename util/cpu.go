@@ -14,8 +14,8 @@ func init() {
 		BrandName: CPU.BrandName,
 		Cache: &CacheInfo{
 			L1: util_os.GetEnvironmentVariable("CPU_CACHE_L1", util_os.ToInt64, int64(CPU.Cache.L1I)),
-			L2: util_os.GetEnvironmentVariable("CPU_CACHE_L2", util_os.ToInt64, int64(CPU.Cache.L1I)),
-			L3: util_os.GetEnvironmentVariable("CPU_CACHE_L3", util_os.ToInt64, int64(CPU.Cache.L1I)),
+			L2: util_os.GetEnvironmentVariable("CPU_CACHE_L2", util_os.ToInt64, int64(CPU.Cache.L2)),
+			L3: util_os.GetEnvironmentVariable("CPU_CACHE_L3", util_os.ToInt64, int64(CPU.Cache.L3)),
 		},
 	}
 
