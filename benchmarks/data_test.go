@@ -12,7 +12,7 @@ import (
 const TestDataSize = 100_000
 
 func init() {
-	DataSet = make([]*BenchMarkData, TestDataSize)
+	DataSet = make([]*BenchmarkData, TestDataSize)
 	Sizes = make([]int, 0)
 
 	fmt.Printf("Generating data set with %v items\n", len(DataSet))
@@ -29,10 +29,10 @@ func init() {
 	fmt.Printf("concurrency: %v\n", util.MaxConcurrency)
 }
 
-var DataSet []*BenchMarkData
+var DataSet []*BenchmarkData
 var Sizes []int
 
-type BenchMarkData struct {
+type BenchmarkData struct {
 	Id          string
 	Name        string
 	Description string
@@ -41,8 +41,8 @@ type BenchMarkData struct {
 	DeletedAt   time.Time
 }
 
-func NewBenchMarData() *BenchMarkData{
-	return &BenchMarkData{
+func NewBenchMarData() *BenchmarkData{
+	return &BenchmarkData{
 		Id: RandomStr(16),
 		Name: RandomStr(16),
 		Description: RandomStr(16),
@@ -52,7 +52,7 @@ func NewBenchMarData() *BenchMarkData{
 	}
 }
 
-func (b *BenchMarkData) GetKey() string {
+func (b *BenchmarkData) GetKey() string {
 	return b.Id
 }
 

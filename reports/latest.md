@@ -1,6 +1,6 @@
 # Benchmark results
 
-## Benchmark 0
+## Benchmark: DefaultWriteTest MapCache, Size: 
 
 |Test Attributes|Value|
 |---------------|-----|
@@ -12,11 +12,17 @@
 
 |Name|Test Amount|Nanoseconds per operation|Bytes per operation|Allocations per operation|
 |----|---|---|---|---|
-|DefaultWriteTest Cache using: map, Size: 10, Test: Writing-8|212872|5317|680|12|
-|DefaultWriteTest Cache using: map, Size: 100, Test: Writing-8|85623|15367|616|11|
-|DefaultWriteTest Cache using: map, Size: 1000, Test: Writing-8|10000|107338|554|10|
-|DefaultWriteTest Cache using: map, Size: 10000, Test: Writing-8|993|1141165|553|10|
-|DefaultReadTest Cache using: map, Size: 10, Test: Reading-8|231214|5097|688|12|
-|DefaultReadTest Cache using: map, Size: 100, Test: Reading-8|132202|10552|624|11|
-|DefaultReadTest Cache using: map, Size: 1000, Test: Reading-8|22171|55566|560|10|
-|DefaultReadTest Cache using: map, Size: 10000, Test: Reading-8|2796|461322|560|10|
+|10, Test: Writing-8|218764|6155|680|12|
+|100, Test: Writing-8|76783|14629|616|11|
+|1000, Test: Writing-8|10000|103541|553|10|
+|10000, Test: Writing-8|1088|1151102|552|10|
+
+## Benchmark: DefaultReadTest MapCache, Size: 
+
+|Name|Test Amount|Nanoseconds per operation|Bytes per operation|Allocations per operation|
+|----|---|---|---|---|
+|10, Test: Reading-8|233601|4973|688|12|
+|100, Test: Reading-8|131488|9446|624|11|
+|1000, Test: Reading-8|23265|51646|560|10|
+|10000, Test: Reading-8|2505|484145|560|10|
+

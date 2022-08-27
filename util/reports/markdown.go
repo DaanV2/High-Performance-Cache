@@ -1,41 +1,45 @@
 package reports
 
-import "errors"
+import (
+	"errors"
+	"strings"
+)
 
 type MarkDownReport struct {
-	BenchMarks []*BenchMarkData
+	Benchmarks []*BenchmarkData
 }
 
-type BenchMarkData struct {
+type BenchmarkData struct {
+	Title      string
 	Attributes map[string]string
-	Results    []*BenchMarkResults
+	Results    []*BenchmarkResults
 	Headers    []string
 }
 
-type BenchMarkResults struct {
+type BenchmarkResults struct {
 	Name   string
 	Values []string
 }
 
 func NewMarkDownReport() *MarkDownReport {
 	return &MarkDownReport{
-		BenchMarks: []*BenchMarkData{},
+		Benchmarks: []*BenchmarkData{},
 	}
 }
 
-func (report *MarkDownReport) NewBenchmark() *BenchMarkData {
-	data := &BenchMarkData{
+func (report *MarkDownReport) NewBenchmark() *BenchmarkData {
+	data := &BenchmarkData{
 		Attributes: map[string]string{},
-		Results:    []*BenchMarkResults{},
+		Results:    []*BenchmarkResults{},
 		Headers:    []string{},
 	}
-	report.BenchMarks = append(report.BenchMarks, data)
+	report.Benchmarks = append(report.Benchmarks, data)
 
 	return data
 }
 
-func (report *BenchMarkData) NewResult() *BenchMarkResults {
-	result := &BenchMarkResults{
+func (report *BenchmarkData) NewResult() *BenchmarkResults {
+	result := &BenchmarkResults{
 		Values: []string{},
 	}
 	report.Results = append(report.Results, result)
@@ -43,11 +47,11 @@ func (report *BenchMarkData) NewResult() *BenchMarkResults {
 	return result
 }
 
-func (report *BenchMarkData) HasData() bool {
+func (report *BenchmarkData) HasData() bool {
 	return len(report.Results) > 0
 }
 
-func (report *BenchMarkData) SetHeader(unit string, index int) error {
+func (report *BenchmarkData) SetHeader(unit string, index int) error {
 	for index >= len(report.Headers) {
 		report.Headers = append(report.Headers, "")
 	}
@@ -74,6 +78,38 @@ func (report *BenchMarkData) SetHeader(unit string, index int) error {
 	return nil
 }
 
-func (data *BenchMarkResults) AddValue(value string) {
+func (report *BenchmarkData) DetermineTitle() {
+	if len(report.Results) == 0 {
+		return
+	}
+
+	var count int
+	for count = 0; report.sameCharacterInName(count); count++ {
+	}
+
+	count = strings.LastIndex(report.Results[0].Name[:count], " ")
+	title := report.Results[0].Name[:count]
+	report.Title = strings.Trim(title, WhiteSpace)
+
+	for index, result := range report.Results {
+		result.Name = strings.Trim(result.Name[count:], WhiteSpace)
+		report.Results[index] = result
+	}
+}
+
+func (report *BenchmarkData) sameCharacterInName(index int) bool {
+	char := report.Results[0].Name[index]
+
+	for _, result := range report.Results[1:] {
+		if result.Name[index] != char {
+			return false
+		}
+	}
+
+	return true
+}
+
+func (data *BenchmarkResults) AddValue(value string) {
 	data.Values = append(data.Values, value)
 }
+

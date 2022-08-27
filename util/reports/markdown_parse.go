@@ -28,10 +28,16 @@ func (report *MarkDownReport) ParseTextFile(filepath string) error {
 				return err
 			}
 
-		} else if strings.HasPrefix(line, "Pass") || strings.HasPrefix(line, "Fail") {
+		} else if strings.HasPrefix(line, "Pass") || 
+		strings.HasPrefix(line, "Fail") ||
+		strings.HasPrefix(line, "Done") {
 			//DONE with this benchmark
 			benchmarkData = report.NewBenchmark()
 		}
+	}
+
+	for _, benchmark := range report.Benchmarks {
+		benchmark.DetermineTitle()
 	}
 
 	return nil
@@ -39,7 +45,7 @@ func (report *MarkDownReport) ParseTextFile(filepath string) error {
 
 const WhiteSpace =  " \t\n\r"
 
-func (data *BenchMarkData) ParseAttribute(text string) error {
+func (data *BenchmarkData) ParseAttribute(text string) error {
 	index := strings.Index(text, ":")
 
 	if index < 0 {
@@ -54,7 +60,7 @@ func (data *BenchMarkData) ParseAttribute(text string) error {
 	return nil
 }
 
-func (data *BenchMarkData) ParseResult(text string) error {
+func (data *BenchmarkData) ParseResult(text string) error {
 	parts := strings.Split(text, "\t")
 
 	if len(parts) < 2 {
@@ -85,3 +91,4 @@ func (data *BenchMarkData) ParseResult(text string) error {
 
 	return nil
 }
+

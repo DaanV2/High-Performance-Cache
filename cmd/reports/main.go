@@ -13,7 +13,7 @@ func main() {
 	var files []fs.FileInfo
 	var err error
 
-	reportFolder := path.Join("..", "..", "reports")
+	reportFolder := path.Join("reports")
 	if files, err = ioutil.ReadDir(reportFolder); err != nil {
 		panic(err)
 	}
