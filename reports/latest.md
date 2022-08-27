@@ -12,17 +12,17 @@
 
 |Name|Test Amount|Nanoseconds per operation|Bytes per operation|Allocations per operation|
 |----:|---:|---:|---:|---:|
-|10, Test: Writing-2|645619|1921|168|4|
-|100, Test: Writing-2|93130|11031|168|4|
-|1000, Test: Writing-2|10000|102073|168|4|
-|10000, Test: Writing-2|1000|1206480|168|4|
+|10, Test: Writing-2|557539|1994|168|4|
+|100, Test: Writing-2|102694|11603|168|4|
+|1000, Test: Writing-2|10000|113592|168|4|
+|10000, Test: Writing-2|943|1312225|169|4|
 
 ## Benchmark: DEFAULT READ TEST MAPCACHE, PER SIZE 
 
 |Name|Test Amount|Nanoseconds per operation|Bytes per operation|Allocations per operation|
 |----:|---:|---:|---:|---:|
-|10, Test: Reading-2|736604|1640|176|4|
-|100, Test: Reading-2|171710|6835|176|4|
-|1000, Test: Reading-2|12313|98459|176|4|
-|10000, Test: Reading-2|1132|1024624|176|4|
+|10, Test: Reading-2|687027|1731|176|4|
+|100, Test: Reading-2|177386|7144|176|4|
+|1000, Test: Reading-2|10000|100742|176|4|
+|10000, Test: Reading-2|1102|1030561|176|4|
 
