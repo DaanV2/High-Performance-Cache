@@ -15,7 +15,7 @@ func BenchmarkDefaultWriteTest(b *testing.B) {
 		testdata := data[:size]
 		cache := newMapCache[*BenchmarkData](size)
 
-		b.Run(Name("MapCache, Per Size: %v, Test: Writing", size), func(b *testing.B) {
+		b.Run(Name("MapCache, Per Size %v, Test: Writing", size), func(b *testing.B) {
 			WriteTest(b, cache, testdata)
 		})
 	}
