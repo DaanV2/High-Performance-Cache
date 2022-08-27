@@ -89,7 +89,7 @@ func (report *BenchmarkData) DetermineTitle() {
 
 	count = strings.LastIndex(report.Results[0].Name[:count], " ")
 	title := report.Results[0].Name[:count]
-	report.Title = strings.ToTitle(strings.Trim(title, WhiteSpace))
+	report.Title = strings.ToTitle(strings.ToLower(strings.Trim(title, WhiteSpace)))
 
 	for index, result := range report.Results {
 		result.Name = strings.Trim(result.Name[count:], WhiteSpace)
