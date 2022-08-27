@@ -8,7 +8,7 @@ import (
 	"github.com/DaanV2/High-Performance-Cache/util"
 )
 
-func BenchmarkDefaultWriteTest(b *testing.B) {
+func Benchmark_Default_Write_Test(b *testing.B) {
 	data := DataSet
 
 	for _, size := range Sizes {
@@ -23,7 +23,7 @@ func BenchmarkDefaultWriteTest(b *testing.B) {
 	fmt.Println("Done")
 }
 
-func BenchmarkDefaultReadTest(b *testing.B) {
+func Benchmark_Default_Read_Test(b *testing.B) {
 	data := DataSet
 
 	for _, size := range Sizes {
