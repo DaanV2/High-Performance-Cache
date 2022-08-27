@@ -2,40 +2,40 @@
 
 |Test Attributes|Value|
 |---------------|:-----|
-|cache L1|32768||cache L2|262144||cache L3|31457280||concurrency|2||cpu|Intel(R) Xeon(R) CPU E5-2673 v3 @ 2.40GHz||goarch|amd64||goos|linux||pkg|github.com/DaanV2/High-Performance-Cache/benchmarks|
+|cache L1|32768||cache L2|1048576||cache L3|37486592||concurrency|2||cpu|Intel(R) Xeon(R) Platinum 8272CL CPU @ 2.60GHz||goarch|amd64||goos|linux||pkg|github.com/DaanV2/High-Performance-Cache/benchmarks|
 ## Benchmark: duplicate items write test mapcache 
 
 |Name|Test Amount|Nanoseconds per operation|Bytes per operation|Allocations per operation|
 |----:|---:|---:|---:|---:|
-|10 Items per test, testing: Writing-2|643772|1909|168|4|
-|100 Items per test, testing: Writing-2|118773|9953|168|4|
-|1000 Items per test, testing: Writing-2|14566|77816|168|4|
-|10000 Items per test, testing: Writing-2|1389|836346|168|4|
+|10 Items per test, testing: Writing-2|820842|1526|168|4|
+|100 Items per test, testing: Writing-2|164395|7590|168|4|
+|1000 Items per test, testing: Writing-2|17922|66880|168|4|
+|10000 Items per test, testing: Writing-2|1647|701248|168|4|
 
 ## Benchmark: duplicate items read test mapcache 
 
 |Name|Test Amount|Nanoseconds per operation|Bytes per operation|Allocations per operation|
 |----:|---:|---:|---:|---:|
-|10 Items per test, testing: Reading-2|740259|1714|176|4|
-|100 Items per test, testing: Reading-2|181414|6587|176|4|
-|1000 Items per test, testing: Reading-2|10000|106892|176|4|
-|10000 Items per test, testing: Reading-2|1213|1010347|176|4|
+|10 Items per test, testing: Reading-2|917160|1349|176|4|
+|100 Items per test, testing: Reading-2|243684|5173|176|4|
+|1000 Items per test, testing: Reading-2|13560|88254|176|4|
+|10000 Items per test, testing: Reading-2|1230|918552|176|4|
 
 ## Benchmark: unique items write test mapcache 
 
 |Name|Test Amount|Nanoseconds per operation|Bytes per operation|Allocations per operation|
 |----:|---:|---:|---:|---:|
-|10 Items per test, testing: Writing-2|725613|1891|168|4|
-|100 Items per test, testing: Writing-2|108181|10914|168|4|
-|1000 Items per test, testing: Writing-2|10000|101189|168|4|
-|10000 Items per test, testing: Writing-2|964|1292951|168|4|
+|10 Items per test, testing: Writing-2|805815|1546|168|4|
+|100 Items per test, testing: Writing-2|124360|9020|168|4|
+|1000 Items per test, testing: Writing-2|14306|82465|168|4|
+|10000 Items per test, testing: Writing-2|1048|1102254|168|4|
 
 ## Benchmark: unique items read test mapcache 
 
 |Name|Test Amount|Nanoseconds per operation|Bytes per operation|Allocations per operation|
 |----:|---:|---:|---:|---:|
-|10 Items per test, testing: Reading-2|745600|1678|176|4|
-|100 Items per test, testing: Reading-2|149745|6984|176|4|
-|1000 Items per test, testing: Reading-2|10000|101185|176|4|
-|10000 Items per test, testing: Reading-2|1213|947807|176|4|
+|10 Items per test, testing: Reading-2|908820|1347|176|4|
+|100 Items per test, testing: Reading-2|231255|5311|176|4|
+|1000 Items per test, testing: Reading-2|12858|94924|176|4|
+|10000 Items per test, testing: Reading-2|1311|926432|176|4|
 
