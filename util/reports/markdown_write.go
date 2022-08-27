@@ -3,6 +3,7 @@ package reports
 import (
 	"fmt"
 	"os"
+	"sort"
 	"strings"
 )
 
@@ -25,8 +26,18 @@ func (report *MarkDownReport) WriteTo(filepath string) error {
 		if len(report.Attributes) > 0 {
 			writer.WriteString("|Test Attributes|Value|\n")
 			writer.WriteString("|---------------|:-----|\n")
+			attributes := make([]string, len(report.Attributes))
+
 			for key, value := range report.Attributes {
-				writer.WriteString(fmt.Sprintf("|%v|%v|\n", key, value))
+				attributes = append(attributes, fmt.Sprintf("%s: %s", key, value))
+			}
+
+			sort.SliceStable(attributes, func(i, j int) bool {
+				return strings.Compare(attributes[i], attributes[j]) < 0
+			})
+
+			for _, attribute := range attributes {
+				writer.WriteString(attribute)
 			}
 			writer.WriteString("\n")
 		}

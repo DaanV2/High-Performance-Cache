@@ -3,6 +3,7 @@ package util
 import (
 	"fmt"
 
+	"github.com/DaanV2/High-Performance-Cache/concurrency"
 	util_os "github.com/DaanV2/High-Performance-Cache/util/os"
 	"github.com/klauspost/cpuid/v2"
 )
@@ -25,7 +26,7 @@ func init() {
 	fmt.Printf("cache L1: %v\n", cpuinfo.Cache.L1)
 	fmt.Printf("cache L2: %v\n", cpuinfo.Cache.L2)
 	fmt.Printf("cache L3: %v\n", cpuinfo.Cache.L3)
-	fmt.Printf("concurrency: %v\n", MaxConcurrency)
+	fmt.Printf("concurrency: %v\n", concurrency.MaxConcurrency)
 }
 
 var cpuinfo *CPUData

@@ -1,5 +1,7 @@
 package cache
 
+import "time"
+
 // CachableItem
 type CachableItem interface {
 	//GetKey returns the key of the item
@@ -18,4 +20,10 @@ type Cache[T CachableItem] interface {
 	Clear() error
 	//Close closes the cache.
 	ForEach(callback func(value T) error) error
+}
+
+
+
+type Cleanable interface {
+	Clean(time time.Time) int
 }
