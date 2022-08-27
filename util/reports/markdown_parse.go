@@ -7,7 +7,7 @@ import (
 )
 
 func (report *MarkDownReport) ParseTextFile(filepath string) error {
-	data, err := ioutil.ReadFile(filepath,)
+	data, err := ioutil.ReadFile(filepath)
 	if err != nil {
 		return err
 	}
@@ -28,9 +28,9 @@ func (report *MarkDownReport) ParseTextFile(filepath string) error {
 				return err
 			}
 
-		} else if strings.HasPrefix(line, "Pass") || 
-		strings.HasPrefix(line, "Fail") ||
-		strings.HasPrefix(line, "Done") {
+		} else if strings.HasPrefix(line, "Pass") ||
+			strings.HasPrefix(line, "Fail") ||
+			strings.HasPrefix(line, "Done") {
 			//DONE with this benchmark
 			benchmarkData = report.NewBenchmark()
 		}
@@ -43,7 +43,7 @@ func (report *MarkDownReport) ParseTextFile(filepath string) error {
 	return nil
 }
 
-const WhiteSpace =  " \t\n\r"
+const WhiteSpace = " \t\n\r"
 
 func (data *BenchmarkData) ParseAttribute(text string) error {
 	index := strings.Index(text, ":")
@@ -91,4 +91,3 @@ func (data *BenchmarkData) ParseResult(text string) error {
 
 	return nil
 }
-

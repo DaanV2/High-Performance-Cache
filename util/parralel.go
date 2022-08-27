@@ -12,7 +12,7 @@ func Parralel[T any](items []T, call func(item T, index int, current []T)) {
 	group := &sync.WaitGroup{}
 	count := len(items)
 	step := count / max
-	
+
 	for i := 0; i < count; i += step {
 		group.Add(1)
 		go parralelSet(items[i:i+step], group, call)
@@ -25,6 +25,6 @@ func parralelSet[T any](items []T, group *sync.WaitGroup, call func(item T, inde
 	for i, item := range items {
 		call(item, i, items)
 	}
-	
+
 	group.Done()
 }

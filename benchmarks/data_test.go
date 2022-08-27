@@ -25,7 +25,7 @@ func init() {
 		size *= 10
 	}
 
-	fmt.Println("Generating data done")	
+	fmt.Println("Generating data done")
 	fmt.Printf("concurrency: %v\n", util.MaxConcurrency)
 }
 
@@ -36,19 +36,19 @@ type BenchmarkData struct {
 	Id          string
 	Name        string
 	Description string
-	CreatedAt time.Time
+	CreatedAt   time.Time
 	UpdatedAt   time.Time
 	DeletedAt   time.Time
 }
 
-func NewBenchMarData() *BenchmarkData{
+func NewBenchMarData() *BenchmarkData {
 	return &BenchmarkData{
-		Id: RandomStr(16),
-		Name: RandomStr(16),
+		Id:          RandomStr(16),
+		Name:        RandomStr(16),
 		Description: RandomStr(16),
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
-		DeletedAt: time.Now(),
+		CreatedAt:   time.Now(),
+		UpdatedAt:   time.Now(),
+		DeletedAt:   time.Now(),
 	}
 }
 
@@ -59,6 +59,6 @@ func (b *BenchmarkData) GetKey() string {
 func RandomStr(length int) string {
 	bytes := make([]byte, length)
 	rand.Read(bytes)
-	
+
 	return hex.EncodeToString(bytes)
 }

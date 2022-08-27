@@ -112,4 +112,3 @@ func (report *BenchmarkData) sameCharacterInName(index int) bool {
 func (data *BenchmarkResults) AddValue(value string) {
 	data.Values = append(data.Values, value)
 }
-

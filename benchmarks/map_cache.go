@@ -43,7 +43,7 @@ func (c *MapCache[T]) Set(value T) error {
 func (c *MapCache[T]) Delete(key string) error {
 	c.mux.Lock()
 	defer c.mux.Unlock()
-	
+
 	delete(c.cache, key)
 	return nil
 }

@@ -33,14 +33,12 @@ func main() {
 }
 
 func convertTextToMD(filepath string) error {
-    report := reports.NewMarkDownReport()
-    
-    if err := report.ParseTextFile(filepath); err != nil {
-        return err
-    }
+	report := reports.NewMarkDownReport()
 
-    filepath = strings.ReplaceAll(filepath, ".txt", ".md")
-    return report.WriteTo(filepath)
+	if err := report.ParseTextFile(filepath); err != nil {
+		return err
+	}
+
+	filepath = strings.ReplaceAll(filepath, ".txt", ".md")
+	return report.WriteTo(filepath)
 }
-
-
