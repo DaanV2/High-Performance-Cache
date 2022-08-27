@@ -43,8 +43,8 @@ type CacheBucketSlice[T CachableItem] struct {
 	items []CacheItem[T]
 }
 
-func NewCacheBucketSlice[T CachableItem](settings CacheBucketSliceSettings) CacheBucketSlice[T] {
-	return CacheBucketSlice[T]{
+func NewCacheBucketSlice[T CachableItem](settings CacheBucketSliceSettings) *CacheBucketSlice[T] {
+	return &CacheBucketSlice[T]{
 		hashRange: NewHashRange(),
 		itemCount: 0,
 		items:     make([]CacheItem[T], settings.MaxSize),
@@ -164,4 +164,30 @@ func (bucketSlice *CacheBucketSlice[T]) Set(value CacheItem[T]) bool {
 // Count returns the amount of items in the cache.
 func (bucketSlice *CacheBucketSlice[T]) Count() int {
 	return bucketSlice.itemCount
+}
+
+// Capacity returns the maximum amount of items the cache can hold.
+func (bucketSlice *CacheBucketSlice[T]) Capacity() int {
+	return len(bucketSlice.items)
+}
+
+//Clear clears the cache.
+func (bucketSlice *CacheBucketSlice[T]) Clear() error {
+	bucketSlice.items = make([]CacheItem[T], len(bucketSlice.items))
+	bucketSlice.itemCount = 0
+	bucketSlice.hashRange = NewHashRange()
+	
+	return nil
+}
+
+//ForEach iterates over the items in the cache.
+func (bucketSlice *CacheBucketSlice[T]) ForEach(callback func(value T) error) error {
+	for _, item := range bucketSlice.items {
+		if item.HasValue() {
+			if err := callback(item.GetValue()); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
 }
