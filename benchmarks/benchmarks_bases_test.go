@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/DaanV2/High-Performance-Cache/cache"
-	"github.com/DaanV2/High-Performance-Cache/util"
+	"github.com/DaanV2/High-Performance-Cache/concurrency"
 )
 
 
@@ -31,7 +31,7 @@ func WriteTest(b *testing.B, settings *TestSettings, testdata []*BenchmarkData) 
 
 	b.Run(Name("%s %v Items per test, testing: Writing", settings.Name, len(testdata)), func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
-			util.Parralel(testdata, func(item *BenchmarkData, index int, current []*BenchmarkData) {
+			concurrency.Parralel(testdata, func(item *BenchmarkData, index int, current []*BenchmarkData) {
 				cache.Set(item)
 			})
 		}
@@ -42,14 +42,14 @@ func ReadTest(b *testing.B, settings *TestSettings, testdata []*BenchmarkData) {
 	cache := settings.CreateCache(len(testdata))
 
 	//Fill test
-	util.Parralel(testdata, func(item *BenchmarkData, index int, current []*BenchmarkData) {
+	concurrency.Parralel(testdata, func(item *BenchmarkData, index int, current []*BenchmarkData) {
 		cache.Set(item)
 	})
 
 
 	b.Run(Name("%s %v Items per test, testing: Reading", settings.Name, len(testdata)), func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
-			util.Parralel(testdata, func(item *BenchmarkData, index int, current []*BenchmarkData) {
+			concurrency.Parralel(testdata, func(item *BenchmarkData, index int, current []*BenchmarkData) {
 				if _, err := cache.Get(item.GetKey()); err != nil {
 					b.Fatal("Could not get item from cache")
 				}
