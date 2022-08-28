@@ -24,7 +24,7 @@ func init() {
 func GenerateSizes[T any](items []T) []int {
 	Sizes := make([]int, 0)
 
-	for size := PowerStep; size < len(DataSet); {
+	for size := 1000; size < len(DataSet); {
 		Sizes = append(Sizes, size)
 		size *= PowerStep
 	}
