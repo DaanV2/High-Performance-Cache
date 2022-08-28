@@ -24,12 +24,13 @@ func (report *MarkDownReport) WriteTo(filepath string) error {
 
 		//Write test attributes
 		if len(report.Attributes) > 0 {
+			writer.WriteString("## Attributes\n\n")
 			writer.WriteString("|Test Attributes|Value|\n")
 			writer.WriteString("|---------------|:-----|\n")
 			attributes := make([]string, len(report.Attributes))
 
 			for key, value := range report.Attributes {
-				attributes = append(attributes, fmt.Sprintf("|%s|%s|", key, value))
+				attributes = append(attributes, fmt.Sprintf("|%s|%s|\n", key, value))
 			}
 
 			sort.SliceStable(attributes, func(i, j int) bool {
