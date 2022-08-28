@@ -17,35 +17,27 @@
 
 |Name|Test Amount|Nanoseconds per operation|Items amount|Items per operation|Bytes per operation|Allocations per operation|
 |----:|---:|---:|---:|---:|---:|---:|
-|Writing-2|791052|1567|10.00|0.0000126|168|4|
-|Writing#01-2|170348|6988|100.0|0.0005870|168|4|
-|Writing#02-2|19562|61558|1000|0.05112|168|4|
-|Writing#03-2|2035|611546|10000|4.914|168|4|
+|Writing-2|20097|60883|1000|0.04976|168|4|
+|Writing#01-2|2012|587089|10000|4.970|168|4|
 
 ## Benchmark: duplicate items read test mapcache testing: 
 
 |Name|Test Amount|Nanoseconds per operation|Items amount|Items per operation|Bytes per operation|Allocations per operation|
 |----:|---:|---:|---:|---:|---:|---:|
-|Reading-2|871070|1398|10.00|0.0000115|176|4|
-|Reading#01-2|258882|4743|100.0|0.0003863|176|4|
-|Reading#02-2|12931|87963|1000|0.07733|176|4|
-|Reading#03-2|1381|880949|10000|7.241|176|4|
+|Reading-2|12618|87455|1000|0.07925|176|4|
+|Reading#01-2|1138|1056239|10000|8.787|176|4|
 
 ## Benchmark: unique items write test mapcache testing: 
 
 |Name|Test Amount|Nanoseconds per operation|Items amount|Items per operation|Bytes per operation|Allocations per operation|
 |----:|---:|---:|---:|---:|---:|---:|
-|Writing-2|817585|1567|10.00|0.0000122|168|4|
-|Writing#01-2|174432|7016|100.0|0.0005733|168|4|
-|Writing#02-2|17690|70176|1000|0.05653|168|4|
-|Writing#03-2|1318|843226|10000|7.587|168|4|
+|Writing-2|17360|69643|1000|0.05760|168|4|
+|Writing#01-2|1356|871653|10000|7.375|168|4|
 
 ## Benchmark: unique items read test mapcache testing: 
 
 |Name|Test Amount|Nanoseconds per operation|Items amount|Items per operation|Bytes per operation|Allocations per operation|
 |----:|---:|---:|---:|---:|---:|---:|
-|Reading-2|897058|1397|10.00|0.0000111|176|4|
-|Reading#01-2|242205|4619|100.0|0.0004129|176|4|
-|Reading#02-2|13005|92258|1000|0.07689|176|4|
-|Reading#03-2|1171|1020742|10000|8.540|176|4|
+|Reading-2|12480|96826|1000|0.08013|176|4|
+|Reading#01-2|1218|987740|10000|8.210|176|4|
 
