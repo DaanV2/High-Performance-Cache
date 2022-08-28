@@ -192,3 +192,34 @@ func (bucketSlice *CacheBucketSlice[T]) ForEach(callback func(value T) error) er
 	}
 	return nil
 }
+
+//Delete removes an item from the cache.
+func (bucketSlice *CacheBucketSlice[T]) Delete(key KeyLookup) bool {
+	start := bucketSlice.GetStartIndex(key.HashCode)
+	items := bucketSlice.items
+	max := len(items)
+
+	//Start at the given index to lookat and loop all around until you find an empty spot
+	//Or replaceable item
+	for i := start; i < max; i++ {
+		item := items[i]
+		//If value check is a match, we replace the item
+		if item.HasValue() {
+			if item.IsMatch(key) {
+				items[i] = CacheItem[T]{}
+				return true
+			}
+		}
+	}
+	for i := 0; i < start; i++ {
+		item := items[i]
+		if item.HasValue() {
+			if item.IsMatch(key) {
+				items[i] = CacheItem[T]{}
+				return true
+			}
+		}
+	}
+
+	return false
+}

@@ -12,4 +12,7 @@ func Test_Items_Implement_Interface(t *testing.T) {
 	key := item.GetKey()
 	
 	assert.Equal(t, key, value)
+
+	kvp := NewKeyValuePair(key, value)
+	assert.Equal(t, kvp.GetKey(), key)
 }
