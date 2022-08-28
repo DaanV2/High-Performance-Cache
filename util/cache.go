@@ -8,6 +8,7 @@ const (
 	CacheL3 CacheKind = 2
 )
 
+// GetCacheSize returns the size of the cache.
 func GetCacheSize(kind CacheKind) int64 {
 	cacheInfo := GetCPUInfo().Cache
 
