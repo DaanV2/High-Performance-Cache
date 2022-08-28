@@ -7,6 +7,9 @@ import (
 
 var MaxConcurrency = runtime.GOMAXPROCS(0)
 
+// Parallel executes a function in parallel on each item in the list.
+// The function is passed the item, the index of the item and the list.
+// The entire item set is balanced across all available cores.
 func Parralel[T any](items []T, call func(item T, index int, current []T)) {
 	max := MaxConcurrency
 	group := &sync.WaitGroup{}
