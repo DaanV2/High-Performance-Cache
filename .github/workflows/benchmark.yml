@@ -35,10 +35,11 @@ jobs:
 
       # Runs a set of commands using the runners shell
       - name: Run benchmarks
-        run: |
-          make benchmark-latest
-          make generate-reports
-          
+        run: make benchmark-latest
+
+      - name: Run generate reports
+        run: make generate-reports
+
       - name: Commit changes
         continue-on-error: true
         run: |
