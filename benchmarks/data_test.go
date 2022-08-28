@@ -21,15 +21,16 @@ func init() {
 	}
 }
 
-func GenerateSizes[T any](items []T) []int {
-	Sizes := make([]int, 0)
-
-	for size := 1000; size < len(DataSet); {
-		Sizes = append(Sizes, size)
-		size *= PowerStep
+func Sizes() []int {
+	return []int{
+		1000,
+		2000,
+		5000,
+		10000,
+		20000,
+		50000,
+		100000,
 	}
-
-	return Sizes
 }
 
 var DataSet []*BenchmarkData

@@ -15,7 +15,7 @@ type TestSettings struct {
 }
 
 func RunBenchMarks(b *testing.B, testdata []*BenchmarkData, settings []*TestSettings, benchmark func(b *testing.B, settings *TestSettings, testdata []*BenchmarkData)) {
-	sizes := GenerateSizes(testdata)
+	sizes := Sizes()
 
 	for _, size := range sizes {
 		for _, settings := range settings {
