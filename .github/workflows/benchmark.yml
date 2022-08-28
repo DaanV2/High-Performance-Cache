@@ -6,7 +6,7 @@ name: Benchmark latest
 on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
-    branches: [ "main" ]
+    branches: ["main"]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -14,7 +14,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  build:
+  benchmark:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -23,11 +23,11 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout Repository
         uses: actions/checkout@v3
-        
+
       - name: Setup Go environment
         uses: actions/setup-go@v3.3.0
-        with: 
-          go-version-file: go.mod          
+        with:
+          go-version-file: go.mod
 
       # Runs a single command using the runners shell
       - name: Build go
@@ -49,4 +49,3 @@ jobs:
           git add .
           git commit -m "auto: Generated report"
           git push
-          
