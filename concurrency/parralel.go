@@ -15,7 +15,11 @@ func Parralel[T any](items []T, call func(item T, index int, current []T)) {
 
 	for i := 0; i < count; i += step {
 		group.Add(1)
-		go parralelSet(items[i:i+step], group, call)
+		max := i+step
+		if max > count {
+			max = count
+		}
+		go parralelSet(items[i:max], group, call)
 	}
 
 	group.Wait()
