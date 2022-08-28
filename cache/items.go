@@ -8,6 +8,12 @@ func (c *CacheItemString) GetKey() string {
 	return string((*c))
 }
 
+//NewCacheItemString creates a new CacheItemString.
+func NewCacheItemString(key string) *CacheItemString {
+	item := CacheItemString(key)
+	return &item
+}
+
 // KeyValuePair is a key/value pair of a key and generic value.
 // Treat this as an immutable object.
 type KeyValuePair[T any] struct {

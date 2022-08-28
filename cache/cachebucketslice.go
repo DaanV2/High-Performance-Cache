@@ -1,6 +1,7 @@
 package cache
 
 import (
+	"fmt"
 	"time"
 	"unsafe"
 
@@ -11,10 +12,13 @@ func init() {
 
 }
 
+// CacheBucketSliceSettings is the settings for creating a CacheBucketSlice.
 type CacheBucketSliceSettings struct {
+	//MaxSize is the maximum item count in a slice.
 	MaxSize int
 }
 
+// DefaultSettings returns the default settings for a CacheBucketSlice.
 func DefaultSettings[T CachableItem](targetCache util.CacheKind) CacheBucketSliceSettings {
 	cacheSize := util.GetCacheSize(targetCache)
 
@@ -28,6 +32,7 @@ func DefaultSettings[T CachableItem](targetCache util.CacheKind) CacheBucketSlic
 	//TODO make this configurable
 	//TODO maybe reduce the cache size by the size of the code use for reading writing the cache (don't forget to add some space for other stuff in the cache)
 	itemsCount = (itemsCount * 100) / 60
+	fmt.Printf("cache bucket slice size: %v\n", itemsCount)
 
 	return CacheBucketSliceSettings{
 		MaxSize: int(itemsCount),
@@ -44,6 +49,7 @@ type CacheBucketSlice[T CachableItem] struct {
 	items []CacheItem[T]
 }
 
+//NewCacheBucketSlice creates a new CacheBucketSlice.
 func NewCacheBucketSlice[T CachableItem](settings CacheBucketSliceSettings) *CacheBucketSlice[T] {
 	return &CacheBucketSlice[T]{
 		hashRange: NewHashRange(),
@@ -52,10 +58,12 @@ func NewCacheBucketSlice[T CachableItem](settings CacheBucketSliceSettings) *Cac
 	}
 }
 
+//GetStartIndex returns the start index for a given key.
 func (bucketSlice *CacheBucketSlice[T]) GetStartIndex(hashcode uint64) int {
 	return int(hashcode) % len(bucketSlice.items)
 }
 
+//IsFull returns true if the bucket is full.
 func (bucketSlice *CacheBucketSlice[T]) IsFull() bool {
 	return bucketSlice.itemCount >= len(bucketSlice.items)
 }
@@ -91,6 +99,7 @@ func (bucketSlice *CacheBucketSlice[T]) Clean(time time.Time) int {
 	return count
 }
 
+//Get returns the item for a given key. if it can be found, else returns false on the second parameter
 func (bucketSlice *CacheBucketSlice[T]) Get(key KeyLookup) (T, bool) {
 	var result T
 
@@ -121,6 +130,7 @@ func (bucketSlice *CacheBucketSlice[T]) Get(key KeyLookup) (T, bool) {
 	return result, false
 }
 
+//Set sets the item for a given key. return true is successfull, false is it failed
 func (bucketSlice *CacheBucketSlice[T]) Set(value CacheItem[T]) bool {
 	//Bucket is full
 	if bucketSlice.IsFull() {
