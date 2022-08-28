@@ -29,12 +29,15 @@ func RunBenchMarks(b *testing.B, testdata []*BenchmarkData, settings []*TestSett
 func WriteTest(b *testing.B, settings *TestSettings, testdata []*BenchmarkData) {	
 	cache := settings.CreateCache(len(testdata))
 
-	b.Run(Name("%s %v Items per test, testing: Writing", settings.Name, len(testdata)), func(b *testing.B) {
+	b.Run(Name("%s testing: Writing", settings.Name), func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
 			concurrency.Parralel(testdata, func(item *BenchmarkData, index int, current []*BenchmarkData) {
 				cache.Set(item)
 			})
 		}
+
+		b.ReportMetric(float64(len(testdata)), "N")
+		b.ReportMetric(float64(len(testdata)) / float64(b.N), "N/op")
 	})
 }
 
@@ -47,7 +50,7 @@ func ReadTest(b *testing.B, settings *TestSettings, testdata []*BenchmarkData) {
 	})
 
 
-	b.Run(Name("%s %v Items per test, testing: Reading", settings.Name, len(testdata)), func(b *testing.B) {
+	b.Run(Name("%s testing: Reading", settings.Name), func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
 			concurrency.Parralel(testdata, func(item *BenchmarkData, index int, current []*BenchmarkData) {
 				if _, err := cache.Get(item.GetKey()); err != nil {
@@ -55,6 +58,9 @@ func ReadTest(b *testing.B, settings *TestSettings, testdata []*BenchmarkData) {
 				}
 			})
 		}
+
+		b.ReportMetric(float64(len(testdata)), "N")
+		b.ReportMetric(float64(len(testdata)) / float64(b.N), "N/op")
 	})
 }
 

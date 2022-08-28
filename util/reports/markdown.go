@@ -70,6 +70,10 @@ func (report *BenchmarkData) SetHeader(unit string, index int) error {
 		header = "Allocations per operation"
 	case "":
 		header = "Test Amount"
+	case "N":
+		header = "Items amount"
+	case "N/op":
+		header = "Items per operation"
 	default:
 		return errors.New("Invalid unit: " + unit)
 	}
