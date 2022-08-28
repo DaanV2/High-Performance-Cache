@@ -34,6 +34,7 @@ func DefaultSettings[T CachableItem](targetCache util.CacheKind) CacheBucketSlic
 	}
 }
 
+//CacheBucketSlice is a cache bucket that stores items in a slice.
 type CacheBucketSlice[T CachableItem] struct {
 	//The hashrange is used to find quickly the correct bucket for a given key.
 	hashRange HashRange
