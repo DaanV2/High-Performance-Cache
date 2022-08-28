@@ -17,35 +17,35 @@
 
 |Name|Test Amount|Nanoseconds per operation|Bytes per operation|Allocations per operation|
 |----:|---:|---:|---:|---:|
-|10 Items per test, testing: Writing-2|662586|1805|168|4|
-|100 Items per test, testing: Writing-2|136026|8700|168|4|
-|1000 Items per test, testing: Writing-2|14012|83813|168|4|
-|10000 Items per test, testing: Writing-2|1393|866536|171|4|
+|10 Items per test, testing: Writing-2|636854|1940|168|4|
+|100 Items per test, testing: Writing-2|126295|9212|168|4|
+|1000 Items per test, testing: Writing-2|13914|85008|168|4|
+|10000 Items per test, testing: Writing-2|1290|881996|168|4|
 
 ## Benchmark: duplicate items read test mapcache 
 
 |Name|Test Amount|Nanoseconds per operation|Bytes per operation|Allocations per operation|
 |----:|---:|---:|---:|---:|
-|10 Items per test, testing: Reading-2|834451|1578|176|4|
-|100 Items per test, testing: Reading-2|196477|7092|176|4|
-|1000 Items per test, testing: Reading-2|10000|110225|176|4|
-|10000 Items per test, testing: Reading-2|990|1146188|176|4|
+|10 Items per test, testing: Reading-2|764448|1669|176|4|
+|100 Items per test, testing: Reading-2|169272|7227|176|4|
+|1000 Items per test, testing: Reading-2|10000|112541|176|4|
+|10000 Items per test, testing: Reading-2|1078|1045952|176|4|
 
 ## Benchmark: unique items write test mapcache 
 
 |Name|Test Amount|Nanoseconds per operation|Bytes per operation|Allocations per operation|
 |----:|---:|---:|---:|---:|
-|10 Items per test, testing: Writing-2|675837|1797|168|4|
-|100 Items per test, testing: Writing-2|136905|8958|168|4|
-|1000 Items per test, testing: Writing-2|10000|100988|168|4|
-|10000 Items per test, testing: Writing-2|810|1402179|168|4|
+|10 Items per test, testing: Writing-2|588066|2086|168|4|
+|100 Items per test, testing: Writing-2|108153|10916|168|4|
+|1000 Items per test, testing: Writing-2|10000|105403|168|4|
+|10000 Items per test, testing: Writing-2|879|1483078|168|4|
 
 ## Benchmark: unique items read test mapcache 
 
 |Name|Test Amount|Nanoseconds per operation|Bytes per operation|Allocations per operation|
 |----:|---:|---:|---:|---:|
-|10 Items per test, testing: Reading-2|751969|1565|176|4|
-|100 Items per test, testing: Reading-2|185106|7346|176|4|
-|1000 Items per test, testing: Reading-2|10000|107023|176|4|
-|10000 Items per test, testing: Reading-2|1044|1051777|176|4|
+|10 Items per test, testing: Reading-2|707022|1673|176|4|
+|100 Items per test, testing: Reading-2|147648|7154|176|4|
+|1000 Items per test, testing: Reading-2|10000|104402|176|4|
+|10000 Items per test, testing: Reading-2|1111|1008909|176|4|
 
