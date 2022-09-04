@@ -19,7 +19,7 @@ type CacheBucketSliceSettings struct {
 }
 
 // DefaultSettings returns the default settings for a CacheBucketSlice.
-func DefaultSettings[T CachableItem](targetCache util.CacheKind) CacheBucketSliceSettings {
+func DefaultBucketSettings[T KeyedObject](targetCache util.CacheKind) CacheBucketSliceSettings {
 	cacheSize := util.GetCacheSize(targetCache)
 
 	var template CacheItem[T]
@@ -40,7 +40,7 @@ func DefaultSettings[T CachableItem](targetCache util.CacheKind) CacheBucketSlic
 }
 
 //CacheBucketSlice is a cache bucket that stores items in a slice.
-type CacheBucketSlice[T CachableItem] struct {
+type CacheBucketSlice[T KeyedObject] struct {
 	//The hashrange is used to find quickly the correct bucket for a given key.
 	hashRange HashRange
 	//The amount of items in the cache
@@ -50,7 +50,7 @@ type CacheBucketSlice[T CachableItem] struct {
 }
 
 //NewCacheBucketSlice creates a new CacheBucketSlice.
-func NewCacheBucketSlice[T CachableItem](settings CacheBucketSliceSettings) *CacheBucketSlice[T] {
+func NewCacheBucketSlice[T KeyedObject](settings CacheBucketSliceSettings) *CacheBucketSlice[T] {
 	return &CacheBucketSlice[T]{
 		hashRange: NewHashRange(),
 		itemCount: 0,
@@ -69,7 +69,7 @@ func (bucketSlice *CacheBucketSlice[T]) IsFull() bool {
 }
 
 // Clean removes any item that is expired.
-func (bucketSlice *CacheBucketSlice[T]) Clean(time time.Time) int {
+func (bucketSlice *CacheBucketSlice[T]) Clean(expiringDate time.Time) int {
 	count := 0
 	itemCount := 0
 	items := bucketSlice.items
@@ -82,7 +82,7 @@ func (bucketSlice *CacheBucketSlice[T]) Clean(time time.Time) int {
 		//Is an item in the stored at i
 		if item.HasValue() {
 			//Is the item expired?
-			if item.IsExpired(time) {
+			if item.IsExpired(expiringDate) {
 				items[i] = CacheItem[T]{}
 				count++
 			} else {
@@ -100,16 +100,16 @@ func (bucketSlice *CacheBucketSlice[T]) Clean(time time.Time) int {
 }
 
 //Get returns the item for a given key. if it can be found, else returns false on the second parameter
-func (bucketSlice *CacheBucketSlice[T]) Get(key KeyLookup) (T, bool) {
-	var result T
+func (bucketSlice *CacheBucketSlice[T]) Get(key KeyLookup) (CacheItem[T], bool) {
+	var result CacheItem[T]
 
-	if !bucketSlice.hashRange.IsInRange(key.HashCode) {
+	if !bucketSlice.hashRange.IsInRange(key.Hashcode) {
 		return result, false
 	}
 
 	//Get the index we expect the item to be at, based on the hashcode
-	//Can still be somewhere else in the cache
-	start := bucketSlice.GetStartIndex(key.HashCode)
+	//Can still be somewhere else in the cache	
+	start := bucketSlice.GetStartIndex(key.Hashcode)
 	items := bucketSlice.items
 	max := len(items)
 
@@ -117,13 +117,13 @@ func (bucketSlice *CacheBucketSlice[T]) Get(key KeyLookup) (T, bool) {
 	for i := start; i < max; i++ {
 		item := items[i]
 		if item.IsMatch(key) {
-			return item.GetValue(), true
+			return item, true
 		}
 	}
 	for i := 0; i < start; i++ {
 		item := items[i]
 		if item.IsMatch(key) {
-			return item.GetValue(), true
+			return item, true
 		}
 	}
 
@@ -132,6 +132,12 @@ func (bucketSlice *CacheBucketSlice[T]) Get(key KeyLookup) (T, bool) {
 
 //Set sets the item for a given key. return true is successfull, false is it failed
 func (bucketSlice *CacheBucketSlice[T]) Set(value CacheItem[T]) bool {
+	return bucketSlice.SetWithExpire(value, time.Now())
+}
+
+//SetWithExpire sets the item for a given key. return true is successfull, false is it failed
+//If the item is expired, it will be replaced with the given item.
+func (bucketSlice *CacheBucketSlice[T]) SetWithExpire(value CacheItem[T], expiringTime time.Time) bool {
 	//Bucket is full
 	if bucketSlice.IsFull() {
 		return false
@@ -147,7 +153,7 @@ func (bucketSlice *CacheBucketSlice[T]) Set(value CacheItem[T]) bool {
 		item := items[i]
 		//If value check is a match, we replace the item
 		if item.HasValue() {
-			if item.IsMatch2(value) {
+			if item.CanPlaceHere(expiringTime, value) {
 				items[i] = value
 				return true
 			}
@@ -159,7 +165,7 @@ func (bucketSlice *CacheBucketSlice[T]) Set(value CacheItem[T]) bool {
 	for i := 0; i < start; i++ {
 		item := items[i]
 		if item.HasValue() {
-			if item.IsMatch2(value) {
+			if item.CanPlaceHere(expiringTime, value) {
 				items[i] = value
 				return true
 			}
@@ -192,10 +198,10 @@ func (bucketSlice *CacheBucketSlice[T]) Clear() error {
 }
 
 //ForEach iterates over the items in the cache.
-func (bucketSlice *CacheBucketSlice[T]) ForEach(callback func(value T) error) error {
+func (bucketSlice *CacheBucketSlice[T]) ForEach(callback func(value CacheItem[T]) error) error {
 	for _, item := range bucketSlice.items {
 		if item.HasValue() {
-			if err := callback(item.GetValue()); err != nil {
+			if err := callback(item); err != nil {
 				return err
 			}
 		}
@@ -205,7 +211,7 @@ func (bucketSlice *CacheBucketSlice[T]) ForEach(callback func(value T) error) er
 
 //Delete removes an item from the cache.
 func (bucketSlice *CacheBucketSlice[T]) Delete(key KeyLookup) bool {
-	start := bucketSlice.GetStartIndex(key.HashCode)
+	start := bucketSlice.GetStartIndex(key.Hashcode)
 	items := bucketSlice.items
 	max := len(items)
 

@@ -28,6 +28,10 @@ func (locks Locks) GetLock(hashcode uint64) *sync.Mutex {
 	return locks.locks[index]
 }
 
+func (locks Locks) GetLockByIndex(index int) *sync.Mutex {
+	return locks.locks[index]
+}
+
 // Count returns the number of locks.
 func (locks Locks) Count() int {
 	return len(locks.locks)

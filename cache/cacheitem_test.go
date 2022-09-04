@@ -15,8 +15,8 @@ func Test_Empty(t *testing.T) {
 		assert.Equal(t, item.HasValue(), false)
 	})
 
-	t.Run("GetHashCode is 0", func(t *testing.T) {
-		assert.Equal(t, item.GetHashCode(), uint64(0))
+	t.Run("GetHashcode is 0", func(t *testing.T) {
+		assert.Equal(t, item.GetHashcode(), uint64(0))
 	})
 
 	t.Run("IsExipred is true, because time 0", func(t *testing.T) {
@@ -40,8 +40,8 @@ func Test_Value(t *testing.T) {
 		assert.Equal(t, item.HasValue(), true)
 	})
 
-	t.Run("GetHashCode is 0", func(t *testing.T) {
-		assert.Equal(t, item.GetHashCode(), hashcode)
+	t.Run("GetHashcode is 0", func(t *testing.T) {
+		assert.Equal(t, item.GetHashcode(), hashcode)
 	})
 
 	t.Run("GetValue is still its same item", func(t *testing.T) {
@@ -61,5 +61,52 @@ func Test_Value(t *testing.T) {
 		now = now.Add(time.Second * 10)
 
 		assert.Equal(t, item.IsExpired(now), true)
+	})
+}
+
+func Test_IsExpired(t *testing.T) {
+	expiresAfter := time.Now()
+	item := NewCacheItem(expiresAfter, NewCacheItemString("0123456789"))
+
+	t.Run("IsExpired is true when time is after expiresAfter", func(t *testing.T) {
+		assert.Equal(t, item.IsExpired(expiresAfter.Add(time.Second*10)), true)
+	})
+
+	t.Run("IsExpired is false when time is before expiresAfter", func(t *testing.T) {
+		assert.Equal(t, item.IsExpired(expiresAfter.Add(time.Second*-10)), false)
+	})
+}
+
+func Test_CanPlaceHere(t *testing.T) {
+	var time0 time.Time
+
+	key1 := NewCacheItemString("0123456789")
+	key2 := NewCacheItemString("abcdefgh")
+
+	filledItem := NewCacheItem(time.Now(), key1)
+	//filledItem2 := NewCacheItem(time.Now(), key2)
+	emptyItem := CacheItem[*CacheItemString]{}
+
+	t.Run("IsMatch returns true if empty", func(t *testing.T) {
+		assert.Equal(t, emptyItem.CanPlaceHere(time0, filledItem), true)
+	})
+
+	t.Run("IsMatch returns true if expired", func(t *testing.T) {
+		timeNow := time.Now()
+		expiredItem := NewCacheItem(timeNow.Add(time.Hour*-1), key2)
+
+		assert.Equal(t, expiredItem.CanPlaceHere(timeNow, filledItem), true)
+	})
+
+	t.Run("IsMatch returns false if not expired and not empty", func(t *testing.T) {
+		expiredItem := NewCacheItem(time.Now().Add(time.Hour*1), key2)
+
+		assert.Equal(t, expiredItem.CanPlaceHere(time0, filledItem), false)
+	})
+
+	t.Run("IsMatch returns true if a match", func(t *testing.T) {
+		item := NewCacheItem(time.Now(), key1)
+
+		assert.Equal(t, item.CanPlaceHere(time0, filledItem), true)
 	})
 }

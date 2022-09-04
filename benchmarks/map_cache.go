@@ -7,49 +7,74 @@ import (
 	"github.com/DaanV2/High-Performance-Cache/cache"
 )
 
-type MapCache[T cache.CachableItem] struct {
-	mux   sync.RWMutex
-	cache map[string]cache.CacheItem[T]
+type MapCache[T cache.KeyedObject] struct {
+	mux          sync.RWMutex
+	cache        map[string]cache.CacheItem[T]
+	defaultCache time.Duration
 }
 
-func newMapCache[T cache.CachableItem](size int) cache.Cache[T] {
+func newMapCache[T cache.KeyedObject](size int) cache.Cache[T] {
 	return &MapCache[T]{
-		cache: make(map[string]cache.CacheItem[T], size),
+		cache:        make(map[string]cache.CacheItem[T], size),
+		defaultCache: time.Hour * 10,
 	}
 }
 
-//Get returns the item from the cache.
-func (c *MapCache[T]) Get(key string) (cache.CacheItem[T], error) {
+// Get returns the item from the cache.
+func (c *MapCache[T]) Get(key string) (cache.CacheItem[T], bool) {
 	c.mux.RLock()
 	defer c.mux.RUnlock()
 
-	if item, ok := c.cache[key]; ok {
-		return item, nil
+	var result cache.CacheItem[T]
+	if result, ok := c.cache[key]; ok {
+		return result, true
 	}
 
-	var result cache.CacheItem[T]
-	return result, cache.NotFoundError(key)
+	return result, false
 }
 
-//Set sets the item in the cache.
-func (c *MapCache[T]) Set(value T) error {
+// Get returns the item from the cache.
+func (c *MapCache[T]) GetOrSet(key string, createFn func(key string) (T, error)) (cache.CacheItem[T], error) {
+	c.mux.RLock()
+	defer c.mux.RUnlock()
+
+	var result cache.CacheItem[T]
+	var ok bool
+	if result, ok = c.cache[key]; ok {
+		return result, nil
+	}
+
+	var value T
+	var err error
+	if value, err = createFn(key); err != nil {
+		return result, err
+	}
+
+	result = cache.NewCacheItem(time.Now().Add(c.defaultCache), value)
+
+	c.cache[key] = result
+	return result, nil
+}
+
+// Set sets the item in the cache.
+func (c *MapCache[T]) Set(value T) bool {
 	c.mux.Lock()
 	defer c.mux.Unlock()
 
-	c.cache[value.GetKey()] = cache.NewCacheItem(time.Now().Add(time.Hour * 24), value)
-	return nil
+	c.cache[value.GetKey()] = cache.NewCacheItem(time.Now().Add(c.defaultCache), value)
+	return true
 }
 
-//Delete deletes the item from the cache.
-func (c *MapCache[T]) Delete(key string) error {
+// Delete deletes the item from the cache.
+func (c *MapCache[T]) Delete(key string) bool {
 	c.mux.Lock()
 	defer c.mux.Unlock()
 
 	delete(c.cache, key)
-	return nil
+	return true
 }
 
-//Clear clears the cache.
+// Clear clears the cache.
 func (c *MapCache[T]) Clear() error {
 	c.mux.Lock()
 	defer c.mux.Unlock()
@@ -58,7 +83,7 @@ func (c *MapCache[T]) Clear() error {
 	return nil
 }
 
-//Close closes the cache.
+// Close closes the cache.
 func (c *MapCache[T]) ForEach(callback func(value cache.CacheItem[T]) error) error {
 	c.mux.RLock()
 	defer c.mux.RUnlock()
@@ -70,4 +95,8 @@ func (c *MapCache[T]) ForEach(callback func(value cache.CacheItem[T]) error) err
 	}
 
 	return nil
+}
+
+func (c *MapCache[T]) Dispose() {
+	c.cache = nil
 }

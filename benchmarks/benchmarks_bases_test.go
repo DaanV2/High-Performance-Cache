@@ -53,7 +53,7 @@ func ReadTest(b *testing.B, settings *TestSettings, testdata []*BenchmarkData) {
 	b.Run(Name("%s testing: Reading", settings.Name), func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
 			concurrency.Parralel(testdata, func(item *BenchmarkData, index int, current []*BenchmarkData) {
-				if _, err := cache.Get(item.GetKey()); err != nil {
+				if _, ok := cache.Get(item.GetKey()); !ok {
 					b.Fatal("Could not get item from cache")
 				}
 			})
