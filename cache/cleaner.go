@@ -20,10 +20,10 @@ type CacheCleaningSettings struct {
 
 func DefaultCacheCleaningSettings() CacheCleaningSettings {
 	return CacheCleaningSettings{
-		AutoClean:  true,
-		Interval:   time.Minute * 10,
-		Parralel:   true,
-		Logger: zap.L(),
+		AutoClean: true,
+		Interval:  time.Minute * 10,
+		Parralel:  true,
+		Logger:    zap.L(),
 	}
 }
 

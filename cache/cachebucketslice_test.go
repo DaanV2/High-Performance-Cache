@@ -28,8 +28,6 @@ func GenerateTestData() []*CacheItemString {
 	return result
 }
 
-
-
 func Test_CacheBucketSlice(t *testing.T) {
 	cache := NewCache()
 	data := GenerateTestData()

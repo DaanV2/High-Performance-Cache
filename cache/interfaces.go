@@ -45,5 +45,3 @@ type Cleanable interface {
 	//CleaqnParralel cleans the cache in parralel.
 	CleanParralel(expiringDate time.Time) int
 }
-
-

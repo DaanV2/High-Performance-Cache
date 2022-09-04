@@ -18,7 +18,7 @@ func Parralel[T any](items []T, call func(item T, index int, current []T)) {
 
 	for i := 0; i < count; i += step {
 		group.Add(1)
-		max := i+step
+		max := i + step
 		if max > count {
 			max = count
 		}

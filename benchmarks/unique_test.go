@@ -10,7 +10,7 @@ func Benchmark_Unique_Items_Write_Test(b *testing.B) {
 
 	tests := []*TestSettings{
 		{
-			Name: "MapCache",
+			Name:        "MapCache",
 			CreateCache: newMapCache[*BenchmarkData],
 		},
 	}
@@ -25,7 +25,7 @@ func Benchmark_Unique_Items_Read_Test(b *testing.B) {
 
 	tests := []*TestSettings{
 		{
-			Name: "MapCache",
+			Name:        "MapCache",
 			CreateCache: newMapCache[*BenchmarkData],
 		},
 	}

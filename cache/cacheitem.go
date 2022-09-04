@@ -72,10 +72,10 @@ func (c CacheItem[T]) IsMatch(key HashKeyedObject) bool {
 // expiringDate is the date the item(s) will expire.
 // other is the item that is already in the space.
 func (c CacheItem[T]) CanPlaceHere(expiringDate time.Time, other HashKeyedObject) bool {
-	if (!c.HasValue()) {
+	if !c.HasValue() {
 		return true
 	}
-	if (c.IsExpired(expiringDate)) {
+	if c.IsExpired(expiringDate) {
 		return true
 	}
 	if c.hashCode != other.GetHashcode() {

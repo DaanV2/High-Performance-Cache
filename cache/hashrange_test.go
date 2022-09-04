@@ -38,8 +38,7 @@ func Test_IsInRange(t *testing.T) {
 	})
 }
 
-func Test_Update(t *testing.T) {	
-
+func Test_Update(t *testing.T) {
 
 	t.Run("Test update with egdes", func(t *testing.T) {
 		hr := NewHashRangeFrom(10, 20)

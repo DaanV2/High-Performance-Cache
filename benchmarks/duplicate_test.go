@@ -10,12 +10,12 @@ func Benchmark_Duplicate_Items_Write_Test(b *testing.B) {
 	data := make([]*BenchmarkData, len(temp))
 
 	for i := 0; i < len(temp); i++ {
-		data[i] = temp[i % 64]
+		data[i] = temp[i%64]
 	}
 
 	tests := []*TestSettings{
 		{
-			Name: "MapCache",
+			Name:        "MapCache",
 			CreateCache: newMapCache[*BenchmarkData],
 		},
 	}
@@ -30,7 +30,7 @@ func Benchmark_Duplicate_Items_Read_Test(b *testing.B) {
 
 	tests := []*TestSettings{
 		{
-			Name: "MapCache",
+			Name:        "MapCache",
 			CreateCache: newMapCache[*BenchmarkData],
 		},
 	}
@@ -39,6 +39,3 @@ func Benchmark_Duplicate_Items_Read_Test(b *testing.B) {
 
 	fmt.Println("Done")
 }
-
-
-

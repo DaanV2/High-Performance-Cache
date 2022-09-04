@@ -18,7 +18,7 @@ func NewCacheItemString(key string) *CacheItemString {
 // Treat this as an immutable object.
 type KeyValuePair[T any] struct {
 	// Key is the key of the key/value pair.
-	Key   string
+	Key string
 	// Value is the value of the key/value pair.
 	Value T
 }
