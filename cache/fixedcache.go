@@ -234,14 +234,14 @@ func (fx *FixedCache[T]) Clean(expiringDate time.Time) int {
 
 // CleanParralel cleans the cache of any expired items in parralel.
 func (fx *FixedCache[T]) CleanParralel(expiringDate time.Time) int {
-	amount := &atomic.Int32{}
+	amount := int32(0)
 
 	concurrency.Parralel(fx.buckets, func(item *FixedCacheBucket[T], index int, current []*FixedCacheBucket[T]) {
 		temp := fx.bucketClean(index, expiringDate)
-		amount.Add(int32(temp))
+		atomic.AddInt32(&amount, int32(temp))
 	})
 
-	return int(amount.Load())
+	return int(amount)
 }
 
 // bucketClean cleans the specified bucket of any expired items.

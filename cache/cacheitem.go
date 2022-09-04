@@ -19,8 +19,10 @@ type CacheItem[T KeyedObject] struct {
 
 // NewCacheItem creates a new CacheItem.
 func NewCacheItem[T KeyedObject](expiresAfter time.Time, value T) CacheItem[T] {
+	key := value.GetKey()
+	
 	return CacheItem[T]{
-		hashCode:     util.GetHashcode(value.GetKey()),
+		hashCode:     util.GetHashcode(key),
 		expiresAfter: expiresAfter,
 		value:        value,
 	}

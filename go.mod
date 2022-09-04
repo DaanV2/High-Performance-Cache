@@ -1,6 +1,6 @@
 module github.com/DaanV2/High-Performance-Cache
 
-go 1.19
+go 1.18
 
 require (
 	github.com/klauspost/cpuid/v2 v2.1.1

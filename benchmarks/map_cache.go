@@ -61,7 +61,10 @@ func (c *MapCache[T]) Set(value T) bool {
 	c.mux.Lock()
 	defer c.mux.Unlock()
 
-	c.cache[value.GetKey()] = cache.NewCacheItem(time.Now().Add(c.defaultCache), value)
+	key := value.GetKey()
+	time := time.Now().Add(c.defaultCache)
+	item := cache.NewCacheItem(time, value)
+	c.cache[key] = item
 	return true
 }
 
