@@ -13,7 +13,8 @@ type FixedCacheBucket[T KeyedObject] struct {
 // NewFixedCacheBucket creates a new FixedCacheBucket with the spaces for the given amount of items
 func NewFixedCacheBucket[T KeyedObject](itemCount int, settings CacheBucketSliceSettings) *FixedCacheBucket[T] {
 	result := &FixedCacheBucket[T]{
-		slices: []*CacheBucketSlice[T]{},
+		slices:    []*CacheBucketSlice[T]{},
+		hashRange: NewHashRange(),
 	}
 
 	for i := 0; i < itemCount; {
@@ -49,6 +50,7 @@ func (fcb *FixedCacheBucket[T]) Set(item CacheItem[T]) bool {
 func (fcb *FixedCacheBucket[T]) SetWithExpire(value CacheItem[T], expiringTime time.Time) bool {
 	for _, slice := range fcb.slices {
 		if slice.SetWithExpire(value, expiringTime) {
+			fcb.hashRange.UpdateRange(value.hashcode)
 			return true
 		}
 	}
@@ -75,6 +77,8 @@ func (fcb *FixedCacheBucket[T]) Clear() error {
 		}
 	}
 
+	fcb.hashRange = NewHashRange()
+
 	return nil
 }
 
@@ -82,9 +86,14 @@ func (fcb *FixedCacheBucket[T]) Clear() error {
 func (fcb *FixedCacheBucket[T]) Clean(expiringDate time.Time) int {
 	amount := 0
 
+	hr := NewHashRange()
+
 	for _, slice := range fcb.slices {
 		amount += slice.Clean(expiringDate)
+		hr.Update(slice.hashRange)
 	}
+
+	fcb.hashRange = hr
 
 	return amount
 }

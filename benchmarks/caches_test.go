@@ -11,6 +11,7 @@ var CachesToTest = []*TestSettings{
 		Name: "FixedCache",
 		CreateCache: func(size int) cache.Cache[*BenchmarkData] {
 			settings := cache.DefaultFixedCacheSettings[*BenchmarkData](size)
+			settings.Cleaning.AutoClean = false
 
 			return cache.NewFixedCache[*BenchmarkData](settings)
 		},

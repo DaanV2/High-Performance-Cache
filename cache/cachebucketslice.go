@@ -87,7 +87,7 @@ func (bucketSlice *CacheBucketSlice[T]) Clean(expiringDate time.Time) int {
 				count++
 			} else {
 				//Else we update the range and count
-				(&newRange).UpdateRange(item.hashCode)
+				(&newRange).UpdateRange(item.hashcode)
 				itemCount++
 			}
 		}
@@ -102,7 +102,6 @@ func (bucketSlice *CacheBucketSlice[T]) Clean(expiringDate time.Time) int {
 // Get returns the item for a given key. if it can be found, else returns false on the second parameter
 func (bucketSlice *CacheBucketSlice[T]) Get(key KeyLookup) (CacheItem[T], bool) {
 	var result CacheItem[T]
-
 	if !bucketSlice.hashRange.IsInRange(key.Hashcode) {
 		return result, false
 	}
@@ -143,7 +142,7 @@ func (bucketSlice *CacheBucketSlice[T]) SetWithExpire(value CacheItem[T], expiri
 		return false
 	}
 
-	start := bucketSlice.GetStartIndex(value.hashCode)
+	start := bucketSlice.GetStartIndex(value.hashcode)
 	items := bucketSlice.items
 	max := len(items)
 
@@ -152,25 +151,17 @@ func (bucketSlice *CacheBucketSlice[T]) SetWithExpire(value CacheItem[T], expiri
 	for i := start; i < max; i++ {
 		item := items[i]
 		//If value check is a match, we replace the item
-		if item.HasValue() {
-			if item.CanPlaceHere(expiringTime, value) {
-				items[i] = value
-				return true
-			}
-		} else {
+		if item.CanPlaceHere(expiringTime, value) {
 			items[i] = value
+			bucketSlice.hashRange.UpdateRange(value.hashcode)
 			return true
 		}
 	}
 	for i := 0; i < start; i++ {
 		item := items[i]
-		if item.HasValue() {
-			if item.CanPlaceHere(expiringTime, value) {
-				items[i] = value
-				return true
-			}
-		} else {
+		if item.CanPlaceHere(expiringTime, value) {
 			items[i] = value
+			bucketSlice.hashRange.UpdateRange(value.hashcode)
 			return true
 		}
 	}
@@ -211,6 +202,10 @@ func (bucketSlice *CacheBucketSlice[T]) ForEach(callback func(value CacheItem[T]
 
 // Delete removes an item from the cache.
 func (bucketSlice *CacheBucketSlice[T]) Delete(key KeyLookup) bool {
+	if !bucketSlice.hashRange.IsInRange(key.Hashcode) {
+		return false
+	}
+
 	start := bucketSlice.GetStartIndex(key.Hashcode)
 	items := bucketSlice.items
 	max := len(items)

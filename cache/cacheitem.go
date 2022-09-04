@@ -10,7 +10,7 @@ import (
 // Treat this item as readonly.
 type CacheItem[T KeyedObject] struct {
 	//READONLY
-	hashCode uint64
+	hashcode uint64
 	//READONLY If time.Now is after this time, the item is expired.
 	expiresAfter time.Time
 	//READONLY
@@ -22,7 +22,7 @@ func NewCacheItem[T KeyedObject](expiresAfter time.Time, value T) CacheItem[T] {
 	key := value.GetKey()
 	
 	return CacheItem[T]{
-		hashCode:     util.GetHashcode(key),
+		hashcode:     util.GetHashcode(key),
 		expiresAfter: expiresAfter,
 		value:        value,
 	}
@@ -35,7 +35,7 @@ func EmptyCacheItem[T KeyedObject]() CacheItem[T] {
 
 // GetHashcode returns the hashcode of the key.
 func (c CacheItem[T]) GetHashcode() uint64 {
-	return c.hashCode
+	return c.hashcode
 }
 
 // GetValue returns the value of the item.
@@ -50,7 +50,7 @@ func (c CacheItem[T]) GetKey() string {
 
 // HasValue returns true if the item has a value.
 func (c CacheItem[T]) HasValue() bool {
-	return c.hashCode != 0
+	return c.hashcode != 0
 }
 
 // IsExpired returns true if the item is expired.
@@ -60,7 +60,7 @@ func (c CacheItem[T]) IsExpired(time time.Time) bool {
 
 // IsMatch returns true if the item is a match for the given key.
 func (c CacheItem[T]) IsMatch(key HashKeyedObject) bool {
-	if c.hashCode != key.GetHashcode() {
+	if c.hashcode != key.GetHashcode() {
 		return false
 	}
 	if c.GetKey() != key.GetKey() {
@@ -80,7 +80,7 @@ func (c CacheItem[T]) CanPlaceHere(expiringDate time.Time, other HashKeyedObject
 	if c.IsExpired(expiringDate) {
 		return true
 	}
-	if c.hashCode != other.GetHashcode() {
+	if c.hashcode != other.GetHashcode() {
 		return false
 	}
 	if c.GetKey() != other.GetKey() {

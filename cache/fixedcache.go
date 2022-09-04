@@ -58,6 +58,10 @@ func (fx *FixedCache[T]) Dispose() {
 // NewFixedCache creates a new FixedCache
 func NewFixedCache[T KeyedObject](settings FixedCacheSettings) *FixedCache[T] {
 	bucketCount := settings.BucketAmount(settings.Capacity)
+	if bucketCount < 10 {
+		bucketCount = 10
+	}
+
 	bucketItemCount := settings.Capacity / bucketCount
 
 	result := &FixedCache[T]{
@@ -109,8 +113,8 @@ func (fx *FixedCache[T]) Get(key string) (CacheItem[T], bool) {
 // Set sets the item in the cache. If the item is already in the cache, it will be updated.
 // Returns true if the item was added or updated. false if failed (or full)
 func (fx *FixedCache[T]) Set(item T) bool {
-	value := NewCacheItem(time.Now(), item)
-	bucket, lock := fx.GetBucket(value.hashCode)
+	value := NewCacheItem(time.Now().Add(fx.settings.CacheDuration), item)
+	bucket, lock := fx.GetBucket(value.hashcode)
 
 	lock.Lock()
 	defer lock.Unlock()
@@ -136,7 +140,7 @@ func (fx *FixedCache[T]) GetOrSet(key string, createFn func(key string) (T, erro
 		return CacheItem[T]{}, err
 	}
 
-	value := NewCacheItem(time.Now(), item)
+	value := NewCacheItem(time.Now().Add(fx.settings.CacheDuration), item)
 	if bucket.Set(value) {
 		return value, nil
 	}

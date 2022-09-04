@@ -43,3 +43,9 @@ func (hr *HashRange) UpdateRange(hashcode uint64) {
 		hr.maxHash = hashcode
 	}
 }
+
+// Update updates the range with the given range.
+func (hr *HashRange) Update(r HashRange) {
+	hr.UpdateRange(r.minHash)
+	hr.UpdateRange(r.maxHash)
+}
