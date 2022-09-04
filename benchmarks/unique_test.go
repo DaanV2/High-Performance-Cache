@@ -7,13 +7,7 @@ import (
 
 func Benchmark_Unique_Items_Write_Test(b *testing.B) {
 	data := DataSet
-
-	tests := []*TestSettings{
-		{
-			Name:        "MapCache",
-			CreateCache: newMapCache[*BenchmarkData],
-		},
-	}
+	tests := CachesToTest
 
 	RunBenchMarks(b, data, tests, WriteTest)
 
@@ -22,13 +16,7 @@ func Benchmark_Unique_Items_Write_Test(b *testing.B) {
 
 func Benchmark_Unique_Items_Read_Test(b *testing.B) {
 	data := DataSet
-
-	tests := []*TestSettings{
-		{
-			Name:        "MapCache",
-			CreateCache: newMapCache[*BenchmarkData],
-		},
-	}
+	tests := CachesToTest
 
 	RunBenchMarks(b, data, tests, ReadTest)
 

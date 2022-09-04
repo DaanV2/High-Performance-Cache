@@ -8,7 +8,7 @@ func (c *CacheItemString) GetKey() string {
 	return string((*c))
 }
 
-//NewCacheItemString creates a new CacheItemString.
+// NewCacheItemString creates a new CacheItemString.
 func NewCacheItemString(key string) *CacheItemString {
 	item := CacheItemString(key)
 	return &item

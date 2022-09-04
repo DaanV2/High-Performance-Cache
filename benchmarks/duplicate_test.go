@@ -8,16 +8,10 @@ import (
 func Benchmark_Duplicate_Items_Write_Test(b *testing.B) {
 	temp := DataSet
 	data := make([]*BenchmarkData, len(temp))
+	tests := CachesToTest
 
 	for i := 0; i < len(temp); i++ {
 		data[i] = temp[i%64]
-	}
-
-	tests := []*TestSettings{
-		{
-			Name:        "MapCache",
-			CreateCache: newMapCache[*BenchmarkData],
-		},
 	}
 
 	RunBenchMarks(b, data, tests, WriteTest)
@@ -26,13 +20,12 @@ func Benchmark_Duplicate_Items_Write_Test(b *testing.B) {
 }
 
 func Benchmark_Duplicate_Items_Read_Test(b *testing.B) {
-	data := DataSet
+	temp := DataSet
+	data := make([]*BenchmarkData, len(temp))
+	tests := CachesToTest
 
-	tests := []*TestSettings{
-		{
-			Name:        "MapCache",
-			CreateCache: newMapCache[*BenchmarkData],
-		},
+	for i := 0; i < len(temp); i++ {
+		data[i] = temp[i%64]
 	}
 
 	RunBenchMarks(b, data, tests, ReadTest)
