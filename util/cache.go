@@ -8,6 +8,23 @@ const (
 	CacheL3 CacheKind = 2
 )
 
+func (ck CacheKind) GetCacheSize() int64 {
+	return GetCacheSize(ck)
+}
+
+func (ck CacheKind) String() string {
+	switch ck {
+	case CacheL1:
+		return "L1"
+	case CacheL2:
+		return "L2"
+	case CacheL3:
+		return "L3"
+	}
+
+	return "unknown"
+}
+
 // GetCacheSize returns the size of the cache.
 func GetCacheSize(kind CacheKind) int64 {
 	cacheInfo := GetCPUInfo().Cache

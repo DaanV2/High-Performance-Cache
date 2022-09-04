@@ -45,7 +45,7 @@ func Test_FixedCache_Get(t *testing.T) {
 
 	t.Run("Get item", func(t *testing.T) {
 		cache := NewFixedCache[*KeyValuePair[string]](settings)
-		
+
 		assert.Equal(t, cache.Set(kvp), true)
 		item, ok := cache.Get("key")
 

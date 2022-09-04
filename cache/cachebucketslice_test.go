@@ -4,7 +4,9 @@ import (
 	"strconv"
 	"testing"
 	"time"
+	"unsafe"
 
+	"github.com/DaanV2/High-Performance-Cache/util"
 	"gotest.tools/assert"
 )
 
@@ -40,4 +42,27 @@ func Test_CacheBucketSlice(t *testing.T) {
 			assert.Equal(t, result, true)
 		}
 	})
+}
+
+func Test_CacheBucketSliceSettings(t *testing.T) {
+	cachesTarget := []util.CacheKind{
+		util.CacheL1,
+		util.CacheL2,
+		util.CacheL3,
+	}
+
+	kvp := NewKeyValuePair("key", "value")
+
+	for _, cacheTarget := range cachesTarget {
+		t.Run("Slice size is fit for cache: "+cacheTarget.String(), func(t *testing.T) {
+			settings := DefaultBucketSettings[*KeyValuePair[string]](cacheTarget)
+			size := int64(unsafe.Sizeof(kvp))
+
+			space := size * int64(settings.MaxSize)
+			cacheSize := int64(cacheTarget.GetCacheSize())
+
+			t.Logf("Space: %d, CacheSize: %d", space, cacheSize)
+			assert.Assert(t, space <= cacheSize)
+		})
+	}
 }

@@ -8,7 +8,7 @@ import (
 
 func Test_MapCache(t *testing.T) {
 	kvp := cache.NewKeyValuePair("key", "value")
-	
+
 	t.Run("Can make cache", func(t *testing.T) {
 		cache := newMapCache[*cache.KeyValuePair[string]](10)
 
