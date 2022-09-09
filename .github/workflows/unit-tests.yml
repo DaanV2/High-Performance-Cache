@@ -22,15 +22,17 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Setup Go environment
+        id: setup-go
         uses: actions/setup-go@v3.3.0
         with:
           go-version-file: "go.mod"
+          cache: true
 
-      - name: Dependencies
+      - name: Dependencies ${{ jobs.setup-go.outputs.go-version }}
         run: go mod download
 
-      - name: Build
+      - name: Build ${{ jobs.setup-go.outputs.go-version }}
         run: go build ./...
 
-      - name: Test
+      - name: Test ${{ jobs.setup-go.outputs.go-version }}
         run: go test ./...
