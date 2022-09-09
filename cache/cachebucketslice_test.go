@@ -76,7 +76,7 @@ func Test_CacheBucketSlice(t *testing.T) {
 			result, ok := cache.Get(lookup)
 
 			startindex := cache.GetStartIndex(lookup.Hashcode)
-			t.Logf("StartIndex: %d for item: %d", startindex, startindex)
+			t.Logf("StartIndex: %d for item: %s", startindex, item.GetKey())
 
 			assert.Equal(t, ok, true, fmt.Sprintf("Item not found: %d", index))
 			assert.Equal(t, result.GetValue(), item, "Value not equal")
