@@ -28,7 +28,7 @@ func NewFixedCacheBucket[T KeyedObject](itemCount int, settings CacheBucketSlice
 
 // Get returns the item from the cache.
 func (fcb *FixedCacheBucket[T]) Get(key KeyLookup) (CacheItem[T], bool) {
-	if !fcb.hashRange.IsInRange(key.Hashcode) {
+	if !fcb.hashRange.Contains(key.Hashcode) {
 		return CacheItem[T]{}, false
 	}
 

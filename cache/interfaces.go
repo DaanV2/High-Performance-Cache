@@ -20,12 +20,27 @@ type HashKeyedObject interface {
 	HashableObject
 }
 
-// Cache is an interface that defines the basic functionality of a cache
-type Cache[T KeyedObject] interface {
-	//Get returns the item from the cache.
-	Get(key string) (CacheItem[T], bool)
+type Disposable interface {
+	//Dispose disposes the object
+	Dispose()
+}
+
+type CacheSet[T KeyedObject] interface {
 	//Set sets the item in the cache.
 	Set(item T) bool
+}
+
+type CacheGet[T KeyedObject] interface {
+	//Get returns the item from the cache.
+	Get(key string) (CacheItem[T], bool)
+}
+
+// Cache is an interface that defines the basic functionality of a cache
+type Cache[T KeyedObject] interface {
+	CacheSet[T]
+	CacheGet[T]
+	Disposable
+
 	//Gets the item from the cache or sets it if it does not exist.
 	GetOrSet(key string, createFn func(key string) (T, error)) (CacheItem[T], error)
 	//Delete deletes the item from the cache.
@@ -34,8 +49,6 @@ type Cache[T KeyedObject] interface {
 	Clear() error
 	//Close closes the cache.
 	ForEach(callback func(value CacheItem[T]) error) error
-	//Dispose disposes the cache.
-	Dispose()
 }
 
 // Cleanable is an interface that defines the basic functionality of a cache that can be cleaned

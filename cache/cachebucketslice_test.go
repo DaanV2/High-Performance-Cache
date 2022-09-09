@@ -7,7 +7,7 @@ import (
 	"unsafe"
 
 	"github.com/DaanV2/High-Performance-Cache/util"
-	"gotest.tools/assert"
+	"github.com/stretchr/testify/assert"
 )
 
 const testSize = 10
@@ -34,13 +34,62 @@ func Test_CacheBucketSlice(t *testing.T) {
 	cache := NewCache()
 	data := GenerateTestData()
 
+	t.Run("Validation Check", func(t *testing.T) {
+		assert.NotNil(t, cache)
+		assert.NotNil(t, cache.items)
+		assert.Equal(t, cache.itemCount, 0)
+	})
+
 	t.Run("Can set all items", func(t *testing.T) {
-		for _, item := range data {
+		for index, item := range data {
 			citem := NewCacheItem(time.Now(), item)
 			result := cache.Set(citem)
 
 			assert.Equal(t, result, true)
+			assert.Equal(t, cache.Count(), index+1)
 		}
+	})
+
+	t.Run("Can get all items", func(t *testing.T) {
+		for _, item := range data {
+			result, ok := cache.Get(NewKeyLookup(item.GetKey()))
+
+			assert.Equal(t, ok, true)
+			assert.Equal(t, result.GetValue(), item)
+		}
+	})
+
+	t.Run("StartIndex cannot be larger then internal size", func(t *testing.T) {
+		max := len(cache.items)
+
+		for i := 0; i < max*3; i++ {
+			startIndex := cache.GetStartIndex(uint64(i))
+
+			assert.Less(t, startIndex, max)
+		}
+	})
+
+	t.Run("ForEach works", func(t *testing.T) {
+		count := 0
+		cache.ForEach(func(value CacheItem[*CacheItemString]) error {
+			if value.HasValue() {
+				count++
+			}
+
+			return nil
+		})
+
+		assert.Equal(t, count, testSize)
+	})
+
+	t.Run("Is Full", func(t *testing.T) {
+		assert.True(t, cache.IsFull())
+	})
+
+	t.Run("Clean", func(t *testing.T) {
+		amount := cache.Clean(time.Now().Add(time.Hour * 3))
+		assert.Equal(t, cache.Capacity(), amount)
+		assert.Equal(t, cache.Count(), 0)
 	})
 }
 
@@ -62,7 +111,7 @@ func Test_CacheBucketSliceSettings(t *testing.T) {
 			cacheSize := int64(cacheTarget.GetCacheSize())
 
 			t.Logf("Space: %d, CacheSize: %d", space, cacheSize)
-			assert.Assert(t, space <= cacheSize)
+			assert.LessOrEqual(t, space, cacheSize)
 		})
 	}
 }

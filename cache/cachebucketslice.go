@@ -32,6 +32,9 @@ func DefaultBucketSettings[T KeyedObject](targetCache util.CacheKind) CacheBucke
 	//TODO make this configurable
 	//TODO maybe reduce the cache size by the size of the code use for reading writing the cache (don't forget to add some space for other stuff in the cache)
 	itemsCount = (itemsCount * 100) / 60
+	if itemsCount < 10 {
+		itemsCount = 10
+	}
 	fmt.Printf("cache bucket slice size: %v\n", itemsCount)
 
 	return CacheBucketSliceSettings{
@@ -102,7 +105,7 @@ func (bucketSlice *CacheBucketSlice[T]) Clean(expiringDate time.Time) int {
 // Get returns the item for a given key. if it can be found, else returns false on the second parameter
 func (bucketSlice *CacheBucketSlice[T]) Get(key KeyLookup) (CacheItem[T], bool) {
 	var result CacheItem[T]
-	if !bucketSlice.hashRange.IsInRange(key.Hashcode) {
+	if !bucketSlice.hashRange.Contains(key.Hashcode) {
 		return result, false
 	}
 
@@ -152,21 +155,26 @@ func (bucketSlice *CacheBucketSlice[T]) SetWithExpire(value CacheItem[T], expiri
 		item := items[i]
 		//If value check is a match, we replace the item
 		if item.CanPlaceHere(expiringTime, value) {
-			items[i] = value
-			bucketSlice.hashRange.UpdateRange(value.hashcode)
+			bucketSlice.setAt(value, i)
 			return true
 		}
 	}
 	for i := 0; i < start; i++ {
 		item := items[i]
 		if item.CanPlaceHere(expiringTime, value) {
-			items[i] = value
-			bucketSlice.hashRange.UpdateRange(value.hashcode)
+			bucketSlice.setAt(value, i)
 			return true
 		}
 	}
 
 	return false
+}
+
+//setAt sets the item at the given index
+func (bucketSlice *CacheBucketSlice[T]) setAt(value CacheItem[T], index int) {
+	bucketSlice.items[index] = value
+	bucketSlice.hashRange.UpdateRange(value.hashcode)
+	bucketSlice.itemCount++
 }
 
 // Count returns the amount of items in the cache.
@@ -202,7 +210,7 @@ func (bucketSlice *CacheBucketSlice[T]) ForEach(callback func(value CacheItem[T]
 
 // Delete removes an item from the cache.
 func (bucketSlice *CacheBucketSlice[T]) Delete(key KeyLookup) bool {
-	if !bucketSlice.hashRange.IsInRange(key.Hashcode) {
+	if !bucketSlice.hashRange.Contains(key.Hashcode) {
 		return false
 	}
 
@@ -233,4 +241,8 @@ func (bucketSlice *CacheBucketSlice[T]) Delete(key KeyLookup) bool {
 	}
 
 	return false
+}
+
+func (bucketSlice *CacheBucketSlice[T]) String() string {
+	return fmt.Sprintf("items: %d, cap: %d, range: %s", bucketSlice.itemCount, len(bucketSlice.items), bucketSlice.hashRange.String())
 }

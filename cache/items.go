@@ -35,3 +35,7 @@ func NewKeyValuePair[T any](key string, value T) *KeyValuePair[T] {
 func (kvp *KeyValuePair[T]) GetKey() string {
 	return kvp.Key
 }
+
+func (kvp *KeyValuePair[T]) String() string {
+	return kvp.GetKey()
+}

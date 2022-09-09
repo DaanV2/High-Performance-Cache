@@ -1,6 +1,9 @@
 package cache
 
-import "math"
+import (
+	"fmt"
+	"math"
+)
 
 type HashRange struct {
 	minHash uint64
@@ -20,8 +23,8 @@ func NewHashRangeFrom(min, max uint64) HashRange {
 	}
 }
 
-// IsInRange returns true if the given hashcode is in the range.
-func (hr HashRange) IsInRange(hashcode uint64) bool {
+// Contains returns true if the given hashcode is in the range.
+func (hr HashRange) Contains(hashcode uint64) bool {
 	if hashcode < hr.minHash {
 		return false
 	}
@@ -48,4 +51,14 @@ func (hr *HashRange) UpdateRange(hashcode uint64) {
 func (hr *HashRange) Update(r HashRange) {
 	hr.UpdateRange(r.minHash)
 	hr.UpdateRange(r.maxHash)
+}
+
+//Clear clears the range.
+func (hr *HashRange) Clear() {
+	hr.minHash = math.MaxUint64
+	hr.maxHash = 0
+}
+
+func (hr *HashRange) String() string {
+	return fmt.Sprintf("[%d, %d]", hr.minHash, hr.maxHash)
 }
