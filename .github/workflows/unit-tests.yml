@@ -28,7 +28,7 @@ jobs:
           go-version-file: "go.mod"
           cache: true
 
-      - name: Dependencies ${{ steps.setup-go.outsputs. }}
+      - name: Dependencies ${{ steps.setup-go.outputs.go-version }}
         run: go mod download
 
       - name: Build ${{ steps.setup-go.outputs.go-version }}
