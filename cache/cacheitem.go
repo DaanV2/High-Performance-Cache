@@ -49,9 +49,9 @@ const emptyKey = ""
 // GetValue returns the value of the item.
 func (c CacheItem[T]) GetKey() string {
 	if c.HasValue() {
-		return c.value.GetKey();
+		return c.value.GetKey()
 	}
-	
+
 	return emptyKey
 }
 
@@ -70,7 +70,10 @@ func (c CacheItem[T]) IsMatch(key HashKeyedObject) bool {
 	if c.hashcode != key.GetHashcode() {
 		return false
 	}
-	if c.GetKey() != key.GetKey() {
+
+	keyThis := c.GetKey()
+	keyOther := key.GetKey()
+	if keyThis != keyOther {
 		return false
 	}
 

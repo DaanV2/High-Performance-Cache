@@ -35,8 +35,10 @@ func GetFilled() (*CacheBucketSlice[*CacheItemString], []*CacheItemString) {
 	cache := NewCache()
 	data := GenerateTestData()
 
+	expire := time.Now().Add(time.Hour * 1)
+
 	for _, item := range data {
-		citem := NewCacheItem(time.Now(), item)
+		citem := NewCacheItem(expire, item)
 		cache.Set(citem)
 	}
 
@@ -54,10 +56,16 @@ func Test_CacheBucketSlice(t *testing.T) {
 
 	t.Run("Can set all items", func(t *testing.T) {
 		cache := NewCache()
-		data := GenerateTestData()
+		data := GenerateTestData()		
+		expire := time.Now().Add(time.Hour * 1)
 
 		for index, item := range data {
-			citem := NewCacheItem(time.Now(), item)
+			citem := NewCacheItem(expire, item)
+
+			assert.NotEqual(t, citem.expiresAfter, time.Time{})
+			assert.NotEqual(t, citem.hashcode, 0)
+			assert.Equal(t, citem.value, item)
+
 			result := cache.Set(citem)
 
 			assert.Equal(t, result, true, "Set failed")

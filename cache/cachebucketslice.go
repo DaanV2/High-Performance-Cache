@@ -150,30 +150,33 @@ func (bucketSlice *CacheBucketSlice[T]) SetWithExpire(value CacheItem[T], expiri
 
 	//Start at the given index to lookat and loop all around until you find an empty spot
 	//Or replaceable item
-	for i := start; i < max; i++ {
-		item := items[i]
+	for index := start; index < max; index++ {
+		item := items[index]
 		//If value check is a match, we replace the item
 		if item.CanPlaceHere(expiringTime, value) {
-			bucketSlice.setAt(value, i)
+			if !item.HasValue() {
+				bucketSlice.itemCount++
+			}
+
+			bucketSlice.items[index] = value
+			bucketSlice.hashRange.UpdateRange(value.hashcode)
 			return true
 		}
 	}
-	for i := 0; i < start; i++ {
-		item := items[i]
+	for index := 0; index < start; index++ {
+		item := items[index]
 		if item.CanPlaceHere(expiringTime, value) {
-			bucketSlice.setAt(value, i)
+			if !item.HasValue() {
+				bucketSlice.itemCount++
+			}
+
+			bucketSlice.items[index] = value
+			bucketSlice.hashRange.UpdateRange(value.hashcode)
 			return true
 		}
 	}
 
 	return false
-}
-
-//setAt sets the item at the given index
-func (bucketSlice *CacheBucketSlice[T]) setAt(value CacheItem[T], index int) {
-	bucketSlice.items[index] = value
-	bucketSlice.hashRange.UpdateRange(value.hashcode)
-	bucketSlice.itemCount++
 }
 
 // Count returns the amount of items in the cache.
