@@ -6,9 +6,9 @@ name: Unit Tests Go
 on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -20,14 +20,17 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-        
+
       - name: Setup Go environment
         uses: actions/setup-go@v3.3.0
         with:
-          go-version-file: 'go.mod'
+          go-version-file: "go.mod"
 
-      - name: Run Unit Tests
-        run: |
-          go mod download
-          go build ./...
-          go test ./...
+      - name: Dependencies
+        run: go mod download
+
+      - name: Build
+        run: go build ./...
+
+      - name: Test
+        run: go test ./...

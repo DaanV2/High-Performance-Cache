@@ -35,7 +35,6 @@ func DefaultBucketSettings[T KeyedObject](targetCache util.CacheKind) CacheBucke
 	if itemsCount < 10 {
 		itemsCount = 10
 	}
-	fmt.Printf("cache bucket slice size: %v\n", itemsCount)
 
 	return CacheBucketSliceSettings{
 		MaxSize: int(itemsCount),
