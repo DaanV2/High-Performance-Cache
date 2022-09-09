@@ -1,6 +1,7 @@
 package cache
 
 import (
+	"fmt"
 	"time"
 
 	util "github.com/DaanV2/High-Performance-Cache/util"
@@ -88,4 +89,8 @@ func (c CacheItem[T]) CanPlaceHere(expiringDate time.Time, other HashKeyedObject
 	}
 
 	return true
+}
+
+func (c CacheItem[T]) String() string {
+	return fmt.Sprintf("key: %s, hashcode: %d, expiresAfter: %s", c.GetKey(), c.hashcode, c.expiresAfter)
 }

@@ -69,6 +69,7 @@ func Test_CacheBucketSlice(t *testing.T) {
 		cache, data := GetFilled()
 		t.Logf("Cache: %v", cache)
 		t.Logf("Data: %v", data)
+		t.Logf("Cache Items: %v", cache.items)
 
 		for index, item := range data {
 			lookup := NewKeyLookup(item.GetKey())
