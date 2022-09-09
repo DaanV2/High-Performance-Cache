@@ -29,7 +29,9 @@ jobs:
           cache: true
 
       - name: Dependencies ${{ steps.setup-go.outputs.go-version }}
-        run: go mod download
+        run: |
+          go mod download
+          go mod tidy
 
       - name: Build ${{ steps.setup-go.outputs.go-version }}
         run: go build ./...
