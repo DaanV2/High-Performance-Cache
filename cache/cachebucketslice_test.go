@@ -30,17 +30,31 @@ func GenerateTestData() []*CacheItemString {
 	return result
 }
 
-func Test_CacheBucketSlice(t *testing.T) {
+func GetFilled() (*CacheBucketSlice[*CacheItemString], []*CacheItemString) {
 	cache := NewCache()
 	data := GenerateTestData()
 
+	for _, item := range data {
+		citem := NewCacheItem(time.Now(), item)
+		cache.Set(citem)
+	}
+
+	return cache, data
+}
+
+func Test_CacheBucketSlice(t *testing.T) {
 	t.Run("Validation Check", func(t *testing.T) {
+		cache := NewCache()
+
 		assert.NotNil(t, cache, "Cache is nil")
 		assert.NotNil(t, cache.items, "Cache items is nil")
 		assert.Equal(t, cache.itemCount, 0, "Cache item count is not 0")
 	})
 
 	t.Run("Can set all items", func(t *testing.T) {
+		cache := NewCache()
+		data := GenerateTestData()
+
 		for index, item := range data {
 			citem := NewCacheItem(time.Now(), item)
 			result := cache.Set(citem)
@@ -51,8 +65,11 @@ func Test_CacheBucketSlice(t *testing.T) {
 	})
 
 	t.Run("Can get all items", func(t *testing.T) {
+		cache, data := GetFilled()
+
 		for _, item := range data {
-			result, ok := cache.Get(NewKeyLookup(item.GetKey()))
+			lookup := NewKeyLookup(item.GetKey())
+			result, ok := cache.Get(lookup)
 
 			assert.Equal(t, ok, true, "Item not found")
 			assert.Equal(t, result.GetValue(), item, "Value not equal")
@@ -60,6 +77,7 @@ func Test_CacheBucketSlice(t *testing.T) {
 	})
 
 	t.Run("StartIndex cannot be larger then internal size", func(t *testing.T) {
+		cache, _ := GetFilled()
 		max := len(cache.items)
 
 		for i := 0; i < max*3; i++ {
@@ -70,6 +88,8 @@ func Test_CacheBucketSlice(t *testing.T) {
 	})
 
 	t.Run("ForEach works", func(t *testing.T) {
+		cache, _ := GetFilled()
+
 		count := 0
 		cache.ForEach(func(value CacheItem[*CacheItemString]) error {
 			if value.HasValue() {
@@ -83,10 +103,14 @@ func Test_CacheBucketSlice(t *testing.T) {
 	})
 
 	t.Run("Is Full", func(t *testing.T) {
+		cache, _ := GetFilled()
+
 		assert.True(t, cache.IsFull())
 	})
 
 	t.Run("Clean", func(t *testing.T) {
+		cache, _ := GetFilled()
+
 		amount := cache.Clean(time.Now().Add(time.Hour * 3))
 		assert.Equal(t, cache.Capacity(), amount)
 		assert.Equal(t, cache.Count(), 0)
