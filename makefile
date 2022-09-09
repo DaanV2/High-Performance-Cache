@@ -2,10 +2,10 @@
 
 
 benchmark-latest:
-	go test -benchmem -run=^# -benchtime=5s -bench=. ./benchmarks > ./reports/latest.txt
+	go test -benchmem -run=^$ -benchtime=5s -bench=./benchmarks > ./reports/latest.txt
 
 benchmark:
-	go test -benchmem -run=^# -benchtime=5s -bench=. ./benchmarks
+	go test -benchmem -run=^$ -benchtime=5s -bench=./benchmarks
 
 build:
 	go build ./...
