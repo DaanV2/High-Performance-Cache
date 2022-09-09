@@ -35,9 +35,9 @@ func Test_CacheBucketSlice(t *testing.T) {
 	data := GenerateTestData()
 
 	t.Run("Validation Check", func(t *testing.T) {
-		assert.NotNil(t, cache)
-		assert.NotNil(t, cache.items)
-		assert.Equal(t, cache.itemCount, 0)
+		assert.NotNil(t, cache, "Cache is nil")
+		assert.NotNil(t, cache.items, "Cache items is nil")
+		assert.Equal(t, cache.itemCount, 0, "Cache item count is not 0")
 	})
 
 	t.Run("Can set all items", func(t *testing.T) {
@@ -45,8 +45,8 @@ func Test_CacheBucketSlice(t *testing.T) {
 			citem := NewCacheItem(time.Now(), item)
 			result := cache.Set(citem)
 
-			assert.Equal(t, result, true)
-			assert.Equal(t, cache.Count(), index+1)
+			assert.Equal(t, result, true, "Set failed")
+			assert.Equal(t, cache.Count(), index+1, "Cache item count is not correct")
 		}
 	})
 
@@ -54,8 +54,8 @@ func Test_CacheBucketSlice(t *testing.T) {
 		for _, item := range data {
 			result, ok := cache.Get(NewKeyLookup(item.GetKey()))
 
-			assert.Equal(t, ok, true)
-			assert.Equal(t, result.GetValue(), item)
+			assert.Equal(t, ok, true, "Item not found")
+			assert.Equal(t, result.GetValue(), item, "Value not equal")
 		}
 	})
 
@@ -65,7 +65,7 @@ func Test_CacheBucketSlice(t *testing.T) {
 		for i := 0; i < max*3; i++ {
 			startIndex := cache.GetStartIndex(uint64(i))
 
-			assert.Less(t, startIndex, max)
+			assert.Less(t, startIndex, max, "StartIndex is larger then internal size")
 		}
 	})
 
@@ -79,7 +79,7 @@ func Test_CacheBucketSlice(t *testing.T) {
 			return nil
 		})
 
-		assert.Equal(t, count, testSize)
+		assert.Equal(t, count, testSize, "ForEach did hit not all items")
 	})
 
 	t.Run("Is Full", func(t *testing.T) {
