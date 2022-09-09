@@ -1,6 +1,7 @@
 package cache
 
 import (
+	"fmt"
 	"strconv"
 	"testing"
 	"time"
@@ -67,11 +68,11 @@ func Test_CacheBucketSlice(t *testing.T) {
 	t.Run("Can get all items", func(t *testing.T) {
 		cache, data := GetFilled()
 
-		for _, item := range data {
+		for index, item := range data {
 			lookup := NewKeyLookup(item.GetKey())
 			result, ok := cache.Get(lookup)
 
-			assert.Equal(t, ok, true, "Item not found")
+			assert.Equal(t, ok, true, fmt.Sprintf("Item not found: %d", index))
 			assert.Equal(t, result.GetValue(), item, "Value not equal")
 		}
 	})
