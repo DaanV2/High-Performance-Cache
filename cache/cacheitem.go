@@ -44,9 +44,15 @@ func (c CacheItem[T]) GetValue() T {
 	return c.value
 }
 
+const emptyKey = ""
+
 // GetValue returns the value of the item.
 func (c CacheItem[T]) GetKey() string {
-	return c.value.GetKey()
+	if c.HasValue() {
+		return c.value.GetKey();
+	}
+	
+	return emptyKey
 }
 
 // HasValue returns true if the item has a value.
