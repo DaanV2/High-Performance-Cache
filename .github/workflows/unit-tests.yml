@@ -34,5 +34,8 @@ jobs:
       - name: Build ${{ steps.setup-go.outputs.go-version }}
         run: go build ./...
 
+      - name: Environment
+        run: go env
+
       - name: Test ${{ steps.setup-go.outputs.go-version }}
         run: go test -v ./...
