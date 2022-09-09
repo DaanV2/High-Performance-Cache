@@ -35,11 +35,11 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Build go
-        run: make build
+        run: go build ./...
 
       # Runs a set of commands using the runners shell
       - name: Run benchmarks
-        run: make benchmark-latest
+        run: go test -benchmem -benchtime=5s -run=^$ -bench=. github.com/DaanV2/High-Performance-Cache/benchmarks > ./reports/latest.txt
 
       - name: Run generate reports
         run: make generate-reports
