@@ -2,10 +2,10 @@
 
 
 benchmark-latest:
-	go test -benchmem -benchtime=5s -run=^$ -bench=. github.com/DaanV2/High-Performance-Cache/benchmarks > ./reports/latest.txt
+	go test -benchmem -benchtime=1s -run=^$$ -bench=./benchmarks github.com/DaanV2/High-Performance-Cache/benchmarks > ./reports/latest.txt
 
 benchmark:
-	go test -benchmem -benchtime=5s -run=^$ -bench=. github.com/DaanV2/High-Performance-Cache/benchmarks
+	go test -benchmem -benchtime=1s -run=^$$ -bench=./benchmarks github.com/DaanV2/High-Performance-Cache/benchmarks
 
 build:
 	go build ./...
