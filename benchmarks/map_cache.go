@@ -7,6 +7,7 @@ import (
 	"github.com/DaanV2/High-Performance-Cache/cache"
 )
 
+// MapCache is a cache that uses a map to store the data
 type MapCache[T cache.KeyedObject] struct {
 	mux          sync.RWMutex
 	cache        map[string]cache.CacheItem[T]
@@ -100,7 +101,10 @@ func (c *MapCache[T]) ForEach(callback func(value cache.CacheItem[T]) error) err
 	return nil
 }
 
-func (c *MapCache[T]) CountCapacity() (count, capacity uint64)
+func (c *MapCache[T]) CountCapacity() (count, capacity uint64) {
+	count = uint64(len(c.cache))
+	return count, count
+}
 
 func (c *MapCache[T]) Dispose() {
 	c.cache = nil
