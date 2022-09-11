@@ -108,3 +108,16 @@ func (fcb *FixedCacheBucket[T]) ForEach(callback func(value CacheItem[T]) error)
 
 	return nil
 }
+
+// CountCapacity returns the total item count and capacity of the cache.
+func (fcb *FixedCacheBucket[T]) CountCapacity() (Count uint64, Capacity uint64) {
+	Count = 0
+	Capacity = 0
+
+	for _, slice := range fcb.slices {
+		Count += uint64(slice.Count())
+		Capacity += uint64(slice.Capacity())
+	}
+
+	return Count, Capacity
+}

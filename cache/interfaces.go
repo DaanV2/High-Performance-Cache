@@ -55,6 +55,6 @@ type Cache[T KeyedObject] interface {
 type Cleanable interface {
 	//Clean cleans the cache.
 	Clean(expiringDate time.Time) int
-	//CleaqnParralel cleans the cache in parralel.
+	//CleanParralel cleans the cache in parralel.
 	CleanParralel(expiringDate time.Time) int
 }

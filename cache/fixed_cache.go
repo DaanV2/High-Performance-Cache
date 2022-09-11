@@ -258,3 +258,17 @@ func (fx *FixedCache[T]) bucketClean(index int, expiringDate time.Time) int {
 
 	return bucket.Clean(expiringDate)
 }
+
+// CountCapacity returns the total item count and capacity of the cache
+func (fx *FixedCache[T]) CountCapacity() (Count uint64, Capacity uint64) {
+	Count = 0
+	Capacity = 0
+
+	for _, bucket := range fx.buckets {
+		co, ca := bucket.CountCapacity()
+		Count += co
+		Capacity += ca
+	}
+
+	return Count, Capacity
+}
