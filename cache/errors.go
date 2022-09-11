@@ -8,6 +8,6 @@ func NotFoundError(Key string) error {
 }
 
 // NotFoundError is returned when an item is not found in the cache.
-func CouldntSetOrGetError(Key string) error {
+func CouldNotSetOrGetError(Key string) error {
 	return errors.New("Couldn't set or get the item: " + Key)
 }

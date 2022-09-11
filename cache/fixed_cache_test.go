@@ -3,15 +3,16 @@ package cache
 import (
 	"testing"
 
+	"github.com/DaanV2/High-Performance-Cache/cache_items"
 	"gotest.tools/assert"
 )
 
 func Test_FixedCache_Creation(t *testing.T) {
-	settings := DefaultFixedCacheSettings[*KeyValuePair[string]](10)
+	settings := DefaultFixedCacheSettings[*cache_items.KeyValuePair[string]](10)
 	settings.Cleaning.AutoClean = false
 
 	t.Run("Default Settings", func(t *testing.T) {
-		cache := NewFixedCache[*KeyValuePair[string]](settings)
+		cache := NewFixedCache[*cache_items.KeyValuePair[string]](settings)
 
 		if cache == nil {
 			t.Error("Cache is nil")
@@ -20,18 +21,18 @@ func Test_FixedCache_Creation(t *testing.T) {
 }
 
 func Test_FixedCache_Set(t *testing.T) {
-	settings := DefaultFixedCacheSettings[*KeyValuePair[string]](10)
+	settings := DefaultFixedCacheSettings[*cache_items.KeyValuePair[string]](10)
 	settings.Cleaning.AutoClean = false
-	kvp := NewKeyValuePair("key", "value")
+	kvp := cache_items.NewKeyValuePair("key", "value")
 
 	t.Run("Set item", func(t *testing.T) {
-		cache := NewFixedCache[*KeyValuePair[string]](settings)
+		cache := NewFixedCache[*cache_items.KeyValuePair[string]](settings)
 
 		assert.Equal(t, cache.Set(kvp), true)
 	})
 
 	t.Run("Set item with existing key", func(t *testing.T) {
-		cache := NewFixedCache[*KeyValuePair[string]](settings)
+		cache := NewFixedCache[*cache_items.KeyValuePair[string]](settings)
 
 		cache.Set(kvp)
 		assert.Equal(t, cache.Set(kvp), true)
@@ -39,12 +40,12 @@ func Test_FixedCache_Set(t *testing.T) {
 }
 
 func Test_FixedCache_Get(t *testing.T) {
-	settings := DefaultFixedCacheSettings[*KeyValuePair[string]](10)
+	settings := DefaultFixedCacheSettings[*cache_items.KeyValuePair[string]](10)
 	settings.Cleaning.AutoClean = false
-	kvp := NewKeyValuePair("key", "value")
+	kvp := cache_items.NewKeyValuePair("key", "value")
 
 	t.Run("Get item", func(t *testing.T) {
-		cache := NewFixedCache[*KeyValuePair[string]](settings)
+		cache := NewFixedCache[*cache_items.KeyValuePair[string]](settings)
 
 		assert.Equal(t, cache.Set(kvp), true)
 		item, ok := cache.Get("key")
@@ -55,14 +56,14 @@ func Test_FixedCache_Get(t *testing.T) {
 }
 
 func Test_FixedCache_ForEach(t *testing.T) {
-	settings := DefaultFixedCacheSettings[*KeyValuePair[string]](10)
+	settings := DefaultFixedCacheSettings[*cache_items.KeyValuePair[string]](10)
 	settings.Cleaning.AutoClean = false
-	kvp1 := NewKeyValuePair("key1", "value1")
-	kvp2 := NewKeyValuePair("key2", "value2")
-	kvp3 := NewKeyValuePair("key3", "value3")
+	kvp1 := cache_items.NewKeyValuePair("key1", "value1")
+	kvp2 := cache_items.NewKeyValuePair("key2", "value2")
+	kvp3 := cache_items.NewKeyValuePair("key3", "value3")
 
 	t.Run("Get item", func(t *testing.T) {
-		cache := NewFixedCache[*KeyValuePair[string]](settings)
+		cache := NewFixedCache[*cache_items.KeyValuePair[string]](settings)
 
 		assert.Equal(t, cache.Set(kvp1), true)
 		assert.Equal(t, cache.Set(kvp2), true)
@@ -70,7 +71,7 @@ func Test_FixedCache_ForEach(t *testing.T) {
 
 		count := 0
 
-		cache.ForEach(func(value CacheItem[*KeyValuePair[string]]) error {
+		cache.ForEach(func(value CacheItem[*cache_items.KeyValuePair[string]]) error {
 			if value.HasValue() {
 				count++
 			}

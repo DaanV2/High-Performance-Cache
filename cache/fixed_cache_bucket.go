@@ -2,6 +2,7 @@ package cache
 
 import "time"
 
+// FixedCacheBucket is a cache bucket that has a fixed size
 type FixedCacheBucket[T KeyedObject] struct {
 	//The hashrange is used to find quickly the correct bucket for a given key.
 	hashRange HashRange
@@ -110,14 +111,14 @@ func (fcb *FixedCacheBucket[T]) ForEach(callback func(value CacheItem[T]) error)
 }
 
 // CountCapacity returns the total item count and capacity of the cache.
-func (fcb *FixedCacheBucket[T]) CountCapacity() (Count uint64, Capacity uint64) {
-	Count = 0
-	Capacity = 0
+func (fcb *FixedCacheBucket[T]) CountCapacity() (count, capacity uint64) {
+	count = 0
+	capacity = 0
 
 	for _, slice := range fcb.slices {
-		Count += uint64(slice.Count())
-		Capacity += uint64(slice.Capacity())
+		count += uint64(slice.Count())
+		capacity += uint64(slice.Capacity())
 	}
 
-	return Count, Capacity
+	return count, capacity
 }

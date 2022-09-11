@@ -100,6 +100,8 @@ func (c *MapCache[T]) ForEach(callback func(value cache.CacheItem[T]) error) err
 	return nil
 }
 
+func (c *MapCache[T]) CountCapacity() (count, capacity uint64)
+
 func (c *MapCache[T]) Dispose() {
 	c.cache = nil
 }

@@ -6,10 +6,12 @@ import (
 
 	util "github.com/DaanV2/High-Performance-Cache/util"
 	"gotest.tools/assert"
+
+	"github.com/DaanV2/High-Performance-Cache/cache_items"
 )
 
 func Test_Empty(t *testing.T) {
-	item := EmptyCacheItem[*CacheItemString]()
+	item := EmptyCacheItem[*cache_items.CacheItemString]()
 
 	t.Run("HasValue is false", func(t *testing.T) {
 		assert.Equal(t, item.HasValue(), false)
@@ -19,13 +21,13 @@ func Test_Empty(t *testing.T) {
 		assert.Equal(t, item.GetHashcode(), uint64(0))
 	})
 
-	t.Run("IsExipred is true, because time 0", func(t *testing.T) {
+	t.Run("IsExpired is true, because time 0", func(t *testing.T) {
 		assert.Equal(t, item.IsExpired(time.Now()), true)
 		assert.Equal(t, item.IsExpired(time.UnixMicro(0)), true)
 	})
 
 	t.Run("GetValue is nil", func(t *testing.T) {
-		var empty *CacheItemString
+		var empty *cache_items.CacheItemString
 		v := item.GetValue()
 		assert.Equal(t, v, empty)
 	})
@@ -34,7 +36,7 @@ func Test_Empty(t *testing.T) {
 func Test_Value(t *testing.T) {
 	key := "0123456789"
 	hashcode := util.GetHashcode(key)
-	item := NewCacheItem(time.Now(), NewCacheItemString(key))
+	item := NewCacheItem(time.Now(), cache_items.NewCacheItemString(key))
 
 	t.Run("HasValue is true", func(t *testing.T) {
 		assert.Equal(t, item.HasValue(), true)
@@ -50,11 +52,11 @@ func Test_Value(t *testing.T) {
 		assert.Equal(t, v1, key)
 	})
 
-	t.Run("IsExpired works as intented", func(t *testing.T) {
+	t.Run("IsExpired works as intended", func(t *testing.T) {
 		now := time.Now()
 		expires := now.Add(time.Second * 5)
 
-		item := NewCacheItem(expires, NewCacheItemString(key))
+		item := NewCacheItem(expires, cache_items.NewCacheItemString(key))
 
 		assert.Equal(t, item.IsExpired(now), false)
 
@@ -66,7 +68,7 @@ func Test_Value(t *testing.T) {
 
 func Test_IsExpired(t *testing.T) {
 	expiresAfter := time.Now()
-	item := NewCacheItem(expiresAfter, NewCacheItemString("0123456789"))
+	item := NewCacheItem(expiresAfter, cache_items.NewCacheItemString("0123456789"))
 
 	t.Run("IsExpired is true when time is after expiresAfter", func(t *testing.T) {
 		assert.Equal(t, item.IsExpired(expiresAfter.Add(time.Second*10)), true)
@@ -80,12 +82,12 @@ func Test_IsExpired(t *testing.T) {
 func Test_CanPlaceHere(t *testing.T) {
 	var time0 time.Time
 
-	key1 := NewCacheItemString("0123456789")
-	key2 := NewCacheItemString("abcdefgh")
+	key1 := cache_items.NewCacheItemString("0123456789")
+	key2 := cache_items.NewCacheItemString("abcdefgh")
 
 	filledItem := NewCacheItem(time.Now(), key1)
 	//filledItem2 := NewCacheItem(time.Now(), key2)
-	emptyItem := CacheItem[*CacheItemString]{}
+	emptyItem := CacheItem[*cache_items.CacheItemString]{}
 
 	t.Run("IsMatch returns true if empty", func(t *testing.T) {
 		assert.Equal(t, emptyItem.CanPlaceHere(time0, filledItem), true)

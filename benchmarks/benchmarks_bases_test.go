@@ -30,7 +30,7 @@ func WriteTest(b *testing.B, settings *TestSettings, testdata []*BenchmarkData) 
 
 	b.Run(Name("%s testing: Writing", settings.Name), func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
-			concurrency.Parralel(testdata, func(item *BenchmarkData, index int, current []*BenchmarkData) {
+			concurrency.Parallel(testdata, func(item *BenchmarkData, index int, current []*BenchmarkData) {
 				cache.Set(item)
 			})
 		}
@@ -44,13 +44,13 @@ func ReadTest(b *testing.B, settings *TestSettings, testdata []*BenchmarkData) {
 	cache := settings.CreateCache(len(testdata))
 
 	//Fill test
-	concurrency.Parralel(testdata, func(item *BenchmarkData, index int, current []*BenchmarkData) {
+	concurrency.Parallel(testdata, func(item *BenchmarkData, index int, current []*BenchmarkData) {
 		cache.Set(item)
 	})
 
 	b.Run(Name("%s testing: Reading", settings.Name), func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
-			concurrency.Parralel(testdata, func(item *BenchmarkData, index int, current []*BenchmarkData) {
+			concurrency.Parallel(testdata, func(item *BenchmarkData, index int, current []*BenchmarkData) {
 				if _, ok := cache.Get(item.GetKey()); !ok {
 					b.Fatal("Could not get item from cache")
 				}

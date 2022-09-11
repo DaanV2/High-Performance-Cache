@@ -1,22 +1,4 @@
-package cache
-
-// CacheItemString an item that stores a string
-type CacheItemString string
-
-// NewCacheItemString creates a new CacheItemString.
-func NewCacheItemString(key string) *CacheItemString {
-	item := CacheItemString(key)
-	return &item
-}
-
-// GetKey returns the key of the KeyValuePair.
-func (c *CacheItemString) GetKey() string {
-	return string((*c))
-}
-
-func (c *CacheItemString) String() string {
-	return string(*c)
-}
+package cache_items
 
 // KeyValuePair is a key/value pair of a key and generic value.
 // Treat this as an immutable object.
@@ -40,6 +22,7 @@ func (kvp *KeyValuePair[T]) GetKey() string {
 	return kvp.Key
 }
 
+// String returns the string representation of the KeyValuePair.
 func (kvp *KeyValuePair[T]) String() string {
 	return kvp.GetKey()
 }

@@ -1,37 +1,12 @@
 package cache
 
 import (
-	"math"
 	"sync"
 	"sync/atomic"
 	"time"
 
 	"github.com/DaanV2/High-Performance-Cache/concurrency"
-	"github.com/DaanV2/High-Performance-Cache/util"
 )
-
-type FixedCacheSettings struct {
-	Capacity      int
-	Cleaning      CacheCleaningSettings
-	BucketAmount  func(items int) int
-	Buckets       CacheBucketSliceSettings
-	LockAmount    int
-	CacheDuration time.Duration
-}
-
-// DefaultFixedCacheSettings creates a new default FixedCacheSettings
-func DefaultFixedCacheSettings[T KeyedObject](capacity int) FixedCacheSettings {
-	return FixedCacheSettings{
-		Capacity: capacity,
-		BucketAmount: func(items int) int {
-			return int(math.Sqrt(float64(items)))
-		},
-		Buckets:       DefaultBucketSettings[T](util.CacheL1),
-		LockAmount:    1024,
-		Cleaning:      DefaultCacheCleaningSettings(),
-		CacheDuration: time.Minute * 3,
-	}
-}
 
 // FixedCache is a cache that has a fixed size
 type FixedCache[T KeyedObject] struct {
@@ -145,7 +120,7 @@ func (fx *FixedCache[T]) GetOrSet(key string, createFn func(key string) (T, erro
 		return value, nil
 	}
 
-	return value, CouldntSetOrGetError(key)
+	return value, CouldNotSetOrGetError(key)
 }
 
 // Delete deletes the item from the cache.
@@ -173,11 +148,11 @@ func (fx *FixedCache[T]) Clear() error {
 }
 
 // Clear clears the cache.
-func (fx *FixedCache[T]) ClearParralel() []error {
+func (fx *FixedCache[T]) ClearParallel() []error {
 	errors := make([]error, len(fx.buckets))
 	lock := sync.Mutex{}
 
-	concurrency.Parralel(fx.buckets, func(item *FixedCacheBucket[T], index int, current []*FixedCacheBucket[T]) {
+	concurrency.Parallel(fx.buckets, func(item *FixedCacheBucket[T], index int, current []*FixedCacheBucket[T]) {
 		err := fx.bucketClear(index)
 
 		lock.Lock()
@@ -236,11 +211,11 @@ func (fx *FixedCache[T]) Clean(expiringDate time.Time) int {
 	return amount
 }
 
-// CleanParralel cleans the cache of any expired items in parralel.
-func (fx *FixedCache[T]) CleanParralel(expiringDate time.Time) int {
+// CleanParallel cleans the cache of any expired items in parallel.
+func (fx *FixedCache[T]) CleanParallel(expiringDate time.Time) int {
 	amount := int32(0)
 
-	concurrency.Parralel(fx.buckets, func(item *FixedCacheBucket[T], index int, current []*FixedCacheBucket[T]) {
+	concurrency.Parallel(fx.buckets, func(item *FixedCacheBucket[T], index int, current []*FixedCacheBucket[T]) {
 		temp := fx.bucketClean(index, expiringDate)
 		atomic.AddInt32(&amount, int32(temp))
 	})
@@ -260,15 +235,15 @@ func (fx *FixedCache[T]) bucketClean(index int, expiringDate time.Time) int {
 }
 
 // CountCapacity returns the total item count and capacity of the cache
-func (fx *FixedCache[T]) CountCapacity() (Count uint64, Capacity uint64) {
-	Count = 0
-	Capacity = 0
+func (fx *FixedCache[T]) CountCapacity() (count, capacity uint64) {
+	count = 0
+	capacity = 0
 
 	for _, bucket := range fx.buckets {
 		co, ca := bucket.CountCapacity()
-		Count += co
-		Capacity += ca
+		count += co
+		capacity += ca
 	}
 
-	return Count, Capacity
+	return count, capacity
 }

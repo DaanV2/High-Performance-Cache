@@ -7,33 +7,19 @@ import (
 	"go.uber.org/zap"
 )
 
-type CacheCleaningSettings struct {
-	//AutoClean determines if the cache should automatically clean itself
-	AutoClean bool
-	//CleanInterval is the interval at which the cache should clean itself
-	Interval time.Duration
-	//Parralel determines if the cleaning should be done in parralel
-	Parralel bool
-	//Logger is the logger that should be used for logging
-	Logger *zap.Logger
-}
-
-func DefaultCacheCleaningSettings() CacheCleaningSettings {
-	return CacheCleaningSettings{
-		AutoClean: true,
-		Interval:  time.Minute * 10,
-		Parralel:  true,
-		Logger:    zap.L(),
-	}
-}
-
+// CacheCleaner is a cache cleaner
 type CacheCleaner struct {
+	// settings is the settings of the cache cleaner
 	settings CacheCleaningSettings
-	cache    Cleanable
-	ctx      context.Context
-	close    context.CancelFunc
+	// cache is the cache that should be cleaned
+	cache Cleanable
+	// ctx is the context of the cache cleaner
+	ctx context.Context
+	// close is the function that should be called to close the cache cleaner
+	close context.CancelFunc
 }
 
+// StartCacheCleaner starts a cache cleaner
 func StartCacheCleaner(settings CacheCleaningSettings, cache Cleanable) *CacheCleaner {
 	ctx, close := context.WithCancel(context.Background())
 
@@ -51,11 +37,15 @@ func StartCacheCleaner(settings CacheCleaningSettings, cache Cleanable) *CacheCl
 	return result
 }
 
+// Stop stops the cache cleaner
 func (cc *CacheCleaner) Dispose() {
+	defer func() {
+		cc.cache = nil
+	}()
 	cc.close()
-	cc.cache = nil
 }
 
+// Start starts the cache cleaner
 func (cc *CacheCleaner) Start() {
 	go func() {
 		cc.settings.Logger.Info("Starting cache cleaner")
@@ -64,6 +54,7 @@ func (cc *CacheCleaner) Start() {
 	}()
 }
 
+// loop loops the cache cleaner
 func (cc *CacheCleaner) loop() {
 	for {
 		select {
@@ -80,9 +71,9 @@ func (cc *CacheCleaner) loop() {
 
 		now := time.Now()
 		amount := 0
-		if cc.settings.Parralel {
-			cc.settings.Logger.Info("Cleaning cache in parralel...")
-			amount = cache.CleanParralel(now)
+		if cc.settings.Parallel {
+			cc.settings.Logger.Info("Cleaning cache in parallel...")
+			amount = cache.CleanParallel(now)
 		} else {
 			cc.settings.Logger.Info("Cleaning cache...")
 			amount = cache.Clean(now)

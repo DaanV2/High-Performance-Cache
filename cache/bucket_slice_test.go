@@ -7,31 +7,32 @@ import (
 	"time"
 	"unsafe"
 
+	"github.com/DaanV2/High-Performance-Cache/cache_items"
 	"github.com/DaanV2/High-Performance-Cache/util"
 	"github.com/stretchr/testify/assert"
 )
 
 const testSize = 10
 
-func NewCache() *CacheBucketSlice[*CacheItemString] {
-	return NewCacheBucketSlice[*CacheItemString](CacheBucketSliceSettings{
+func NewCache() *CacheBucketSlice[*cache_items.CacheItemString] {
+	return NewCacheBucketSlice[*cache_items.CacheItemString](CacheBucketSliceSettings{
 		MaxSize: testSize,
 	})
 }
 
-func GenerateTestData() []*CacheItemString {
-	result := make([]*CacheItemString, 0, testSize)
+func GenerateTestData() []*cache_items.CacheItemString {
+	result := make([]*cache_items.CacheItemString, 0, testSize)
 
 	for i := 0; i < testSize; i++ {
 		key := "key" + strconv.FormatInt(int64(i), 10)
-		item := CacheItemString(key)
+		item := cache_items.CacheItemString(key)
 		result = append(result, &item)
 	}
 
 	return result
 }
 
-func GetFilled() (*CacheBucketSlice[*CacheItemString], []*CacheItemString) {
+func GetFilled() (*CacheBucketSlice[*cache_items.CacheItemString], []*cache_items.CacheItemString) {
 	cache := NewCache()
 	data := GenerateTestData()
 
@@ -56,7 +57,7 @@ func Test_CacheBucketSlice(t *testing.T) {
 
 	t.Run("Can set all items", func(t *testing.T) {
 		cache := NewCache()
-		data := GenerateTestData()		
+		data := GenerateTestData()
 		expire := time.Now().Add(time.Hour * 1)
 
 		for index, item := range data {
@@ -106,7 +107,7 @@ func Test_CacheBucketSlice(t *testing.T) {
 		cache, _ := GetFilled()
 
 		count := 0
-		cache.ForEach(func(value CacheItem[*CacheItemString]) error {
+		cache.ForEach(func(value CacheItem[*cache_items.CacheItemString]) error {
 			if value.HasValue() {
 				count++
 			}
@@ -139,11 +140,11 @@ func Test_CacheBucketSliceSettings(t *testing.T) {
 		util.CacheL3,
 	}
 
-	kvp := NewKeyValuePair("key", "value")
+	kvp := cache_items.NewKeyValuePair("key", "value")
 
 	for _, cacheTarget := range cachesTarget {
 		t.Run("Slice size is fit for cache: "+cacheTarget.String(), func(t *testing.T) {
-			settings := DefaultBucketSettings[*KeyValuePair[string]](cacheTarget)
+			settings := DefaultBucketSettings[*cache_items.KeyValuePair[string]](cacheTarget)
 			size := int64(unsafe.Sizeof(kvp))
 
 			space := size * int64(settings.MaxSize)
