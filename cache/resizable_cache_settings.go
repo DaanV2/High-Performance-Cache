@@ -8,7 +8,7 @@ type ResizableCacheSettings struct {
 	//ShouldResize is a function that returns true if the cache should be resized, and a value to how much
 	ShouldResize func(count, capacity uint64) (uint64, bool)
 	// ResizeClean is the cache cleaning settings of the resize cache alone
-	ResizeClean CacheCleaningSettings
+	ResizeSettings CacheCleaningSettings
 }
 
 // DefaultResizableCacheSettings is the default settings for a resizable cache
@@ -19,7 +19,7 @@ func DefaultResizableCacheSettings[T KeyedObject](capacity int) ResizableCacheSe
 	return ResizableCacheSettings{
 		ShouldResize:       DefaultResizeFunction,
 		FixedCacheSettings: DefaultFixedCacheSettings[T](capacity),
-		ResizeClean:        resizeSettings,
+		ResizeSettings:     resizeSettings,
 	}
 }
 

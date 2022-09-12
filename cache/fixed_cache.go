@@ -20,16 +20,6 @@ type FixedCache[T KeyedObject] struct {
 	Clearer *CacheCleaner
 }
 
-// Dispose disposes the cache
-func (fx *FixedCache[T]) Dispose() {
-	if fx.Clearer != nil {
-		fx.Clearer.Dispose()
-	}
-
-	fx.buckets = nil
-	fx.Clearer = nil
-}
-
 // NewFixedCache creates a new FixedCache
 func NewFixedCache[T KeyedObject](settings FixedCacheSettings) *FixedCache[T] {
 	bucketCount := settings.BucketAmount(settings.Capacity)
@@ -52,6 +42,21 @@ func NewFixedCache[T KeyedObject](settings FixedCacheSettings) *FixedCache[T] {
 	}
 
 	return result
+}
+
+// Dispose disposes the cache
+func (fx *FixedCache[T]) Dispose() {
+	if fx.Clearer != nil {
+		fx.Clearer.Dispose()
+	}
+
+	fx.buckets = nil
+	fx.Clearer = nil
+}
+
+// GetCleaner returns the cleaner
+func (fx *FixedCache[T]) GetCleaner() *CacheCleaner {
+	return fx.Clearer
 }
 
 // GetBucket returns the bucket for the given key

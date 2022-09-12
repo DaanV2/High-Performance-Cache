@@ -54,6 +54,11 @@ func (cc *CacheCleaner) Start() {
 	}()
 }
 
+// Stop stops the cache cleaner
+func (cc *CacheCleaner) Stop() {
+	cc.close()
+}
+
 // loop loops the cache cleaner
 func (cc *CacheCleaner) loop() {
 	for {

@@ -62,6 +62,9 @@ type Cleanable interface {
 	Clean(expiringDate time.Time) int
 	//CleanParallel cleans the cache in parallel.
 	CleanParallel(expiringDate time.Time) int
+
+	//The cleaning handler
+	GetCleaner() *CacheCleaner
 }
 
 // CacheCleanable is an interface that defines the basic functionality of a cache that can be cleaned

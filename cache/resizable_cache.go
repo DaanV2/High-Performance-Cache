@@ -107,6 +107,11 @@ func (rc *ResizableCache[T]) Dispose() {
 	}
 }
 
+// GetCleaner returns the cleaner
+func (fx *ResizableCache[T]) GetCleaner() *CacheCleaner {
+	return fx.Clearer
+}
+
 // IsResizing returns true if the cache is currently resizing
 func (rc *ResizableCache[T]) IsResizing() bool {
 	return rc.isResizing.Load()
@@ -119,34 +124,14 @@ func (rc *ResizableCache[T]) ForEach(callback func(value CacheItem[T]) error) er
 
 // Clean cleans the cache.
 func (rc *ResizableCache[T]) Clean(expiringDate time.Time) int {
-	if rc.ResizeIf() {
-		return 0
-	}
-
-	amount := rc.currentCache.Clean(expiringDate)
-
-	old := rc.oldCache
-	if old != nil {
-		amount += old.Clean(expiringDate)
-	}
-
-	return amount
+	rc.ResizeIf()
+	return 0
 }
 
 // CleanParallel cleans the cache in parallel.
 func (rc *ResizableCache[T]) CleanParallel(expiringDate time.Time) int {
-	if rc.ResizeIf() {
-		return 0
-	}
-
-	amount := rc.currentCache.CleanParallel(expiringDate)
-
-	old := rc.oldCache
-	if old != nil {
-		amount += old.CleanParallel(expiringDate)
-	}
-
-	return amount
+	rc.ResizeIf()
+	return 0
 }
 
 // ResizeIf resizes the cache if needed
@@ -173,6 +158,7 @@ func (rc *ResizableCache[T]) ResizeIf() bool {
 
 	//Make sure the oldCache is cleared
 	old := rc.currentCache
+	old.GetCleaner().Stop()
 	defer func() {
 		rc.oldCache = nil
 		old.Dispose()
