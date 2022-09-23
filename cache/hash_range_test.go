@@ -24,7 +24,7 @@ func Test_Contains(t *testing.T) {
 		}
 	})
 
-	t.Run("Test egdes", func(t *testing.T) {
+	t.Run("Test hash edges", func(t *testing.T) {
 		hr := NewHashRangeFrom(10, 20)
 
 		assert.Equal(t, hr.Contains(10), true)
@@ -40,7 +40,7 @@ func Test_Contains(t *testing.T) {
 
 func Test_Update(t *testing.T) {
 
-	t.Run("Test update with egdes", func(t *testing.T) {
+	t.Run("Test update with edges", func(t *testing.T) {
 		hr := NewHashRangeFrom(10, 20)
 
 		assert.Equal(t, hr.Contains(10), true)
