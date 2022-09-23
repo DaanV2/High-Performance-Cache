@@ -9,7 +9,6 @@ import (
 
 func Test_FixedCache_Creation(t *testing.T) {
 	settings := DefaultFixedCacheSettings[*cache_items.KeyValuePair[string]](10)
-	settings.Cleaning.AutoClean = false
 
 	t.Run("Default Settings", func(t *testing.T) {
 		cache := NewFixedCache[*cache_items.KeyValuePair[string]](settings)
@@ -22,7 +21,6 @@ func Test_FixedCache_Creation(t *testing.T) {
 
 func Test_FixedCache_Set(t *testing.T) {
 	settings := DefaultFixedCacheSettings[*cache_items.KeyValuePair[string]](10)
-	settings.Cleaning.AutoClean = false
 	kvp := cache_items.NewKeyValuePair("key", "value")
 
 	t.Run("Set item", func(t *testing.T) {
@@ -41,7 +39,6 @@ func Test_FixedCache_Set(t *testing.T) {
 
 func Test_FixedCache_Get(t *testing.T) {
 	settings := DefaultFixedCacheSettings[*cache_items.KeyValuePair[string]](10)
-	settings.Cleaning.AutoClean = false
 	kvp := cache_items.NewKeyValuePair("key", "value")
 
 	t.Run("Get item", func(t *testing.T) {
@@ -57,7 +54,6 @@ func Test_FixedCache_Get(t *testing.T) {
 
 func Test_FixedCache_ForEach(t *testing.T) {
 	settings := DefaultFixedCacheSettings[*cache_items.KeyValuePair[string]](10)
-	settings.Cleaning.AutoClean = false
 	kvp1 := cache_items.NewKeyValuePair("key1", "value1")
 	kvp2 := cache_items.NewKeyValuePair("key2", "value2")
 	kvp3 := cache_items.NewKeyValuePair("key3", "value3")

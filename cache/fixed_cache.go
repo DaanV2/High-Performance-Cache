@@ -16,8 +16,6 @@ type FixedCache[T KeyedObject] struct {
 	locks concurrency.Locks
 	//The settings for the cache
 	settings FixedCacheSettings
-	//The cleaning handler
-	Clearer *CacheCleaner
 }
 
 // NewFixedCache creates a new FixedCache
@@ -35,8 +33,6 @@ func NewFixedCache[T KeyedObject](settings FixedCacheSettings) *FixedCache[T] {
 		settings: settings,
 	}
 
-	result.Clearer = StartCacheCleaner(settings.Cleaning, result)
-
 	for i := 0; i < bucketCount; i++ {
 		result.buckets[i] = NewFixedCacheBucket[T](bucketItemCount, settings.Buckets)
 	}
@@ -46,17 +42,12 @@ func NewFixedCache[T KeyedObject](settings FixedCacheSettings) *FixedCache[T] {
 
 // Dispose disposes the cache
 func (fx *FixedCache[T]) Dispose() {
-	if fx.Clearer != nil {
-		fx.Clearer.Dispose()
-	}
-
+	buckets := fx.buckets
 	fx.buckets = nil
-	fx.Clearer = nil
-}
 
-// GetCleaner returns the cleaner
-func (fx *FixedCache[T]) GetCleaner() *CacheCleaner {
-	return fx.Clearer
+	for _, bucket := range buckets {
+		bucket.Dispose()
+	}
 }
 
 // GetBucket returns the bucket for the given key

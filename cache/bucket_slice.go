@@ -248,3 +248,9 @@ func (bucketSlice *CacheBucketSlice[T]) Delete(key KeyLookup) bool {
 func (bucketSlice *CacheBucketSlice[T]) String() string {
 	return fmt.Sprintf("items: %d, cap: %d, range: %s", bucketSlice.itemCount, len(bucketSlice.items), bucketSlice.hashRange.String())
 }
+
+func (bucketSlice *CacheBucketSlice[T]) Dispose() {
+	bucketSlice.itemCount = 0
+	bucketSlice.hashRange = NewHashRange()
+	bucketSlice.items = nil
+}

@@ -14,8 +14,6 @@ type ResizableCache[T KeyedObject] struct {
 	oldCache CacheCleanable[T]
 	// isResizing is a flag that indicates if the cache is currently resizing
 	isResizing *atomic.Bool
-	//The cleaning handler
-	Clearer *CacheCleaner
 	// settings is the settings of the cache
 	settings ResizableCacheSettings
 }
@@ -26,8 +24,6 @@ func NewResizableCache[T KeyedObject](settings ResizableCacheSettings) *Resizabl
 		settings:   settings,
 		isResizing: atomic.NewBool(false),
 	}
-
-	result.Clearer = StartCacheCleaner(settings.FixedCacheSettings.Cleaning, result)
 
 	result.currentCache = NewFixedCache[T](settings.FixedCacheSettings)
 
@@ -107,11 +103,6 @@ func (rc *ResizableCache[T]) Dispose() {
 	}
 }
 
-// GetCleaner returns the cleaner
-func (fx *ResizableCache[T]) GetCleaner() *CacheCleaner {
-	return fx.Clearer
-}
-
 // IsResizing returns true if the cache is currently resizing
 func (rc *ResizableCache[T]) IsResizing() bool {
 	return rc.isResizing.Load()
@@ -147,18 +138,17 @@ func (rc *ResizableCache[T]) ResizeIf() bool {
 	defer rc.isResizing.Store(false)
 
 	count, capacity := rc.currentCache.CountCapacity()
-	nsize, resize := rc.settings.ShouldResize(count, capacity)
+	newSize, resize := rc.settings.ShouldResize(count, capacity)
 
 	if !resize {
 		return false
 	}
 
-	rc.settings.Capacity = int(nsize)
+	rc.settings.Capacity = int(newSize)
 	newCache := NewFixedCache[T](rc.settings.FixedCacheSettings)
 
 	//Make sure the oldCache is cleared
 	old := rc.currentCache
-	old.GetCleaner().Stop()
 	defer func() {
 		rc.oldCache = nil
 		old.Dispose()

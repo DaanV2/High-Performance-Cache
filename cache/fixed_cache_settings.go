@@ -11,8 +11,6 @@ import (
 type FixedCacheSettings struct {
 	// Capacity is the capacity of the cache
 	Capacity int
-	// Cleaning is the cleaning settings of the cache
-	Cleaning CacheCleaningSettings
 	// The amount of buckets to create for the given amount of items
 	BucketAmount func(items int) int
 	// The settings of the buckets
@@ -32,7 +30,6 @@ func DefaultFixedCacheSettings[T KeyedObject](capacity int) FixedCacheSettings {
 		},
 		Buckets:       DefaultBucketSettings[T](util.CacheL1),
 		LockAmount:    1024,
-		Cleaning:      DefaultCacheCleaningSettings(),
 		CacheDuration: time.Minute * 3,
 	}
 }

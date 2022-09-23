@@ -122,3 +122,13 @@ func (fcb *FixedCacheBucket[T]) CountCapacity() (count, capacity uint64) {
 
 	return count, capacity
 }
+
+func (fbc *FixedCacheBucket[T]) Dispose() {
+	slices := fbc.slices
+	fbc.hashRange = NewHashRange()
+	fbc.slices = nil
+
+	for _, slice := range slices {
+		slice.Dispose()
+	}
+}
