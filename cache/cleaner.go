@@ -12,7 +12,7 @@ type CacheCleaner struct {
 	// settings is the settings of the cache cleaner
 	settings CacheCleaningSettings
 	// cache is the cache that should be cleaned
-	cache Cleanable
+	caches []Cleanable
 	// ctx is the context of the cache cleaner
 	ctx context.Context
 	// close is the function that should be called to close the cache cleaner
@@ -20,12 +20,12 @@ type CacheCleaner struct {
 }
 
 // StartCacheCleaner starts a cache cleaner
-func StartCacheCleaner(settings CacheCleaningSettings, cache Cleanable) *CacheCleaner {
+func StartCacheCleaner(settings CacheCleaningSettings) *CacheCleaner {
 	ctx, close := context.WithCancel(context.Background())
 
 	result := &CacheCleaner{
 		settings: settings,
-		cache:    cache,
+		caches:   make([]Cleanable, 0, 1),
 		ctx:      ctx,
 		close:    close,
 	}
@@ -40,7 +40,7 @@ func StartCacheCleaner(settings CacheCleaningSettings, cache Cleanable) *CacheCl
 // Stop stops the cache cleaner
 func (cc *CacheCleaner) Dispose() {
 	defer func() {
-		cc.cache = nil
+		cc.caches = nil
 	}()
 	cc.close()
 }
@@ -66,12 +66,18 @@ func (cc *CacheCleaner) loop() {
 		case <-cc.ctx.Done():
 			return
 		case <-time.After(cc.settings.Interval):
+			cc.Clean()
 		}
+	}
+}
 
-		cache := cc.cache
+// Clean performs the cache cleaning
+func (cc *CacheCleaner) Clean() {
+	caches := cc.caches
+	for _, cache := range caches {
 		if cache == nil {
 			cc.settings.Logger.Warn("Cache is nil...")
-			return
+			continue
 		}
 
 		now := time.Now()
@@ -85,5 +91,18 @@ func (cc *CacheCleaner) loop() {
 		}
 
 		cc.settings.Logger.Info("Cleaned cache", zap.Int("amount", amount))
+	}
+}
+
+func (cc *CacheCleaner) Push(cache Cleanable) {
+	cc.caches = append(cc.caches, cache)
+}
+
+func (cc *CacheCleaner) Remove(cache Cleanable) {
+	for i, c := range cc.caches {
+		if c == cache {
+			cc.caches = append(cc.caches[:i], cc.caches[i+1:]...)
+			return
+		}
 	}
 }
