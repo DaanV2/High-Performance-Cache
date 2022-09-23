@@ -1,13 +1,10 @@
-# Get / Set
+# CacheItem
 
-- [Get / Set](#get--set)
-  - [CacheItem](#cacheitem)
-    - [Can Place](#can-place)
-    - [Is Match](#is-match)
+- [CacheItem](#cacheitem)
+  - [Can Place](#can-place)
+  - [Is Match](#is-match)
 
-## CacheItem
-
-### Can Place
+## Can Place
 
 ```mermaid
 graph
@@ -38,7 +35,7 @@ graph
     false-->done
 ```
 
-### Is Match
+## Is Match
 
 ```mermaid
 graph
