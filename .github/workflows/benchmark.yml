@@ -31,6 +31,7 @@ jobs:
       - name: Setup Go environment
         uses: actions/setup-go@v3.3.0
         with:
+          check-latest: true
           go-version-file: go.mod
 
       # Runs a single command using the runners shell
