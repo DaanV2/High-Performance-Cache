@@ -26,6 +26,7 @@ jobs:
         uses: actions/setup-go@v3.3.0
         with:
           go-version-file: "go.mod"
+          check-latest: true
           cache: true
 
       - name: Dependencies ${{ steps.setup-go.outputs.go-version }}
