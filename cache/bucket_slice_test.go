@@ -100,6 +100,7 @@ func Test_CacheBucketSlice(t *testing.T) {
 			startIndex := cache.GetStartIndex(uint64(i))
 
 			assert.Less(t, startIndex, max, "StartIndex is larger then internal size")
+			assert.GreaterOrEqual(t, startIndex, 0, "StartIndex or equal to 0")
 		}
 	})
 

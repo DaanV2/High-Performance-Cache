@@ -17,8 +17,8 @@ func RunBenchMarks(b *testing.B, testdata []*BenchmarkData, settings []*TestSett
 	sizes := Sizes()
 
 	for _, size := range sizes {
-		for _, settings := range settings {
-			benchmark(b, settings, testdata[:size])
+		for _, setting := range settings {
+			benchmark(b, setting, testdata[:size])
 		}
 	}
 
@@ -28,15 +28,14 @@ func RunBenchMarks(b *testing.B, testdata []*BenchmarkData, settings []*TestSett
 func WriteTest(b *testing.B, settings *TestSettings, testdata []*BenchmarkData) {
 	cache := settings.CreateCache(len(testdata))
 
-	b.Run(Name("%s testing: Writing", settings.Name), func(b *testing.B) {
+	b.Run(Name("type:%s,testing:Writing/", settings.Name), func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
 			concurrency.Parallel(testdata, func(item *BenchmarkData, index int, current []*BenchmarkData) {
 				cache.Set(item)
 			})
 		}
 
-		b.ReportMetric(float64(len(testdata)), "N")
-		b.ReportMetric(float64(len(testdata))/float64(b.N), "N/op")
+		b.ReportMetric(float64(len(testdata)), "items")
 	})
 }
 
@@ -48,7 +47,7 @@ func ReadTest(b *testing.B, settings *TestSettings, testdata []*BenchmarkData) {
 		cache.Set(item)
 	})
 
-	b.Run(Name("%s testing: Reading", settings.Name), func(b *testing.B) {
+	b.Run(Name("type:%s,testing:Reading/", settings.Name), func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
 			concurrency.Parallel(testdata, func(item *BenchmarkData, index int, current []*BenchmarkData) {
 				if _, ok := cache.Get(item.GetKey()); !ok {
@@ -57,8 +56,7 @@ func ReadTest(b *testing.B, settings *TestSettings, testdata []*BenchmarkData) {
 			})
 		}
 
-		b.ReportMetric(float64(len(testdata)), "N")
-		b.ReportMetric(float64(len(testdata))/float64(b.N), "N/op")
+		b.ReportMetric(float64(len(testdata)), "items")
 	})
 }
 

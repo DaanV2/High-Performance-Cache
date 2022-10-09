@@ -62,7 +62,12 @@ func NewCacheBucketSlice[T KeyedObject](settings CacheBucketSliceSettings) *Cach
 
 // GetStartIndex returns the start index for a given key.
 func (bucketSlice *CacheBucketSlice[T]) GetStartIndex(hashcode uint64) int {
-	return int(hashcode) % len(bucketSlice.items)
+	result := int(hashcode % uint64(len(bucketSlice.items)))
+	if result < 0 {
+		result = -result
+	}
+
+	return result
 }
 
 // IsFull returns true if the bucket is full.
