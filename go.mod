@@ -3,7 +3,7 @@ module github.com/DaanV2/High-Performance-Cache
 go 1.19
 
 require (
-	github.com/klauspost/cpuid/v2 v2.1.2
+	github.com/klauspost/cpuid/v2 v2.2.1
 	go.uber.org/atomic v1.10.0
 	gotest.tools v2.2.0+incompatible
 )
