@@ -18,7 +18,7 @@ require (
 require (
 	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
-	github.com/stretchr/testify v1.8.1
+	github.com/stretchr/testify v1.8.2
 	go.uber.org/zap v1.24.0
 	golang.org/x/sys v0.0.0-20220915200043-7b5979e65e41 // indirect
 )
