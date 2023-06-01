@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/klauspost/cpuid/v2 v2.2.4
-	go.uber.org/atomic v1.10.0
+	go.uber.org/atomic v1.11.0
 	gotest.tools v2.2.0+incompatible
 )
 
